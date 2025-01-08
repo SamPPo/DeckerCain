@@ -1,16 +1,41 @@
+using NUnit.Framework;
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 
-public class Decker_namespace : MonoBehaviour
+namespace Decker
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public enum Keyword
     {
-        
+        None,
+        Spend,
+        Miss,
+        End
     }
 
-    // Update is called once per frame
-    void Update()
+    public enum PositionPreference
     {
-        
+        Top,
+        Upper,
+        Random,
+        Lower,
+        Bottom
+    }
+
+    public enum Targetting
+    {
+        Enemy,
+        Self,
+        Ally,
+        All
+    }
+
+    [Serializable]
+    public class EffectPayload
+    {
+        public Effect_sc effect;
+        public int magnitude;
+        public Targetting target;
+        public List<Card_SO> newCards;
     }
 }

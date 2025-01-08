@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using NUnit.Framework;
 using UnityEngine;
@@ -11,6 +12,8 @@ public class GameMaster_sc : MonoBehaviour
     private List<Transform> spawnPoints;
     [SerializeField]
     private List<GameObject> spawnCharacters;
+    [SerializeField]
+    private List<Card_SO> debugDeck;
 
     private void Start()
     {
@@ -35,7 +38,7 @@ public class GameMaster_sc : MonoBehaviour
     [ContextMenu("StartCombat")]
     void StartCombat()
     {
-        //TurnAllocator_sc.StartNextRound();
-        TriggerHandler_sc.StartRoundPrecall();
+        TurnAllocator_sc.StartNextRound();
+        //TriggerHandler_sc.StartRoundPrecall();
     }
 }

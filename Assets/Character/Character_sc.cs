@@ -18,12 +18,6 @@ public class Character_sc : MonoBehaviour
     public static StartTurnDelegate startTurn;
 
 
-
-    private void Start()
-    {
-
-    }
-
     public void StartTurn()
     {
         Debug.Log("Character_sc.START Turn");
@@ -33,6 +27,7 @@ public class Character_sc : MonoBehaviour
     IEnumerator WaitForTurnEnd()
     {
         yield return new WaitForSeconds(Pvsc.W_AfterTurn);
+        EndTurn();
     }
 
     public void EndTurn()

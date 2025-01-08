@@ -35,3 +35,8 @@ public static class TurnAllocator_sc
         GiveTurnToNextCharacter();
     }
 }
+
+public class TurnAllocatorSingle
+{
+
+}

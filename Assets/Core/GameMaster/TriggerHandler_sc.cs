@@ -31,7 +31,7 @@ public static class TriggerHandler_sc
         else
         {
             binders[triggerIndex].eventTriggerComplete += TriggerNextEvent;
-            binders[triggerIndex].TriggerThis();
+            binders[triggerIndex].TriggerActivation();
             triggerIndex++;
         }
 
