@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Item_sc : Activatable_sc
+public class Item_sc : EffectContainer_sc
 { 
 
 }

@@ -2,20 +2,20 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.TextCore.Text;
 
-public class TurnAllocator_sc
+public static class TurnAllocator_sc
 {
-    private List<GameObject> characters;
-    public void SetCharacters(List<GameObject> c) { characters = c; }
+    private static List<GameObject> characters;
+    public static void SetCharacters(List<GameObject> c) { characters = c; }
 
-    int turnIndex = 0;
+    private static int turnIndex = 0;
 
-    public void StartNextRound()
+    public static void StartNextRound()
     {
         turnIndex = 0;
         GiveTurnToNextCharacter();
     }
 
-    private void GiveTurnToNextCharacter()
+    private static void GiveTurnToNextCharacter()
     {
         if (turnIndex >= characters.Count)
         {
@@ -28,7 +28,7 @@ public class TurnAllocator_sc
         }
     }
 
-    private void OnCharacterTurnEnd()
+    private static void OnCharacterTurnEnd()
     {
         Character_sc.endTurn -= OnCharacterTurnEnd;
         turnIndex++;

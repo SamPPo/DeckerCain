@@ -5,7 +5,6 @@ using UnityEngine;
 public class GameMaster_sc : MonoBehaviour
 {
     private List<GameObject> characters = new();
-    private TurnAllocator_sc turnAllocator = new();
 
     //FOR DEBUG ONLY!
     [SerializeField]
@@ -27,7 +26,7 @@ public class GameMaster_sc : MonoBehaviour
 
     private void InitializeScripts()
     {
-        turnAllocator.SetCharacters(characters);
+        TurnAllocator_sc.SetCharacters(characters);
     }
 
     /*
@@ -36,6 +35,7 @@ public class GameMaster_sc : MonoBehaviour
     [ContextMenu("StartCombat")]
     void StartCombat()
     {
-        turnAllocator.StartNextRound();
+        //TurnAllocator_sc.StartNextRound();
+        TriggerHandler_sc.StartRoundPrecall();
     }
 }

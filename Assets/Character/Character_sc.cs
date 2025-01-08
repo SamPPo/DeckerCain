@@ -1,32 +1,48 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class Character_sc : MonoBehaviour
 {
     //Card piles
-    private CardPile_sc deckPile;
-    private CardPile_sc playPile;
-    private CardPile_sc spentPile;
+    private DeckPile_sc deckPile;
+    private PlayPile_sc playPile;
+    private SpentPile_sc spentPile;
+    private Card_sc cardBeingPlayed;
 
     //delegates
     public delegate void EndTurnDelegate();
     public static EndTurnDelegate endTurn;
 
-    public void StartTurn()
+    public delegate void StartTurnDelegate();
+    public static StartTurnDelegate startTurn;
+
+
+
+    private void Start()
     {
-        Debug.Log("Character_sc.StartTurn");
-        StartCoroutine(WaitWhileTurnEnds());
+
     }
 
-    IEnumerator WaitWhileTurnEnds()
+    public void StartTurn()
+    {
+        Debug.Log("Character_sc.START Turn");
+        StartCoroutine(WaitForTurnEnd());
+    }
+
+    IEnumerator WaitForTurnEnd()
     {
         yield return new WaitForSeconds(Pvsc.W_AfterTurn);
-        EndTurn();
     }
 
     public void EndTurn()
     {
-        Debug.Log("Character_sc.EndTurn");
+        Debug.Log("Character_sc.END Turn");
         endTurn?.Invoke();
+    }
+
+    private void DrawTopCardOfDeck()
+    {
+        cardBeingPlayed = deckPile.GetCardAtIndex(0);
     }
 }
