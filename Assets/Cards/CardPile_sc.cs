@@ -2,9 +2,10 @@ using NUnit.Framework;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CardPile_sc : MonoBehaviour
+public class CardPile_sc
 {
     private List<Card_sc> cards = new();
+    public int GetPileSize() { return cards.Count; }
 
     public void AddCard(Card_sc c)
     {

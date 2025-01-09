@@ -6,9 +6,11 @@ public class Character_sc : MonoBehaviour
 {
     //Card piles
     private DeckPile_sc deckPile;
+    public void SetDeckPile(DeckPile_sc c) { deckPile = (DeckPile_sc)c; }
+
     private PlayPile_sc playPile;
     private SpentPile_sc spentPile;
-    private Card_sc cardBeingPlayed;
+    //private Card_sc cardBeingPlayed;
 
     //delegates
     public delegate void EndTurnDelegate();
@@ -21,6 +23,7 @@ public class Character_sc : MonoBehaviour
     public void StartTurn()
     {
         Debug.Log("Character_sc.START Turn");
+        PlayACardChain();
         StartCoroutine(WaitForTurnEnd());
     }
 
@@ -36,8 +39,14 @@ public class Character_sc : MonoBehaviour
         endTurn?.Invoke();
     }
 
-    private void DrawTopCardOfDeck()
+    private void PlayACardChain()
     {
-        cardBeingPlayed = deckPile.GetCardAtIndex(0);
+        var cardBeingPlayed = GetTopCardOfDeck();
+        cardBeingPlayed.PlayCard();
+    }
+
+    private Card_sc GetTopCardOfDeck()
+    {
+        return deckPile.GetCardAtIndex(0);
     }
 }

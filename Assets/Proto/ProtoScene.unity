@@ -127,6 +127,30 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 839944510797602592, guid: 4c011be941bd2e74990da3fa97d75dc0, type: 3}
+      propertyPath: debugDeck.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 839944510797602592, guid: 4c011be941bd2e74990da3fa97d75dc0, type: 3}
+      propertyPath: 'debugDeck.Array.data[0]'
+      value: 
+      objectReference: {fileID: 11400000, guid: b57262fabe188e04fb5186c21d000c94, type: 2}
+    - target: {fileID: 839944510797602592, guid: 4c011be941bd2e74990da3fa97d75dc0, type: 3}
+      propertyPath: 'debugDeck.Array.data[1]'
+      value: 
+      objectReference: {fileID: 11400000, guid: b57262fabe188e04fb5186c21d000c94, type: 2}
+    - target: {fileID: 839944510797602592, guid: 4c011be941bd2e74990da3fa97d75dc0, type: 3}
+      propertyPath: 'debugDeck.Array.data[2]'
+      value: 
+      objectReference: {fileID: 11400000, guid: b57262fabe188e04fb5186c21d000c94, type: 2}
+    - target: {fileID: 839944510797602592, guid: 4c011be941bd2e74990da3fa97d75dc0, type: 3}
+      propertyPath: spawnCharacters.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 839944510797602592, guid: 4c011be941bd2e74990da3fa97d75dc0, type: 3}
+      propertyPath: 'spawnCharacters.Array.data[2]'
+      value: 
+      objectReference: {fileID: 6667650691411701266, guid: ca0bc4df1ec1c5a4bb816313410d32de, type: 3}
     - target: {fileID: 4918890258702822413, guid: 4c011be941bd2e74990da3fa97d75dc0, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

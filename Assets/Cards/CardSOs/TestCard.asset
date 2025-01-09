@@ -12,8 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4b924654278176546ae617abbac225ae, type: 3}
   m_Name: TestCard
   m_EditorClassIdentifier: 
-  card:
+  cardData:
     cardName: 
-    effectPayloads: []
+    effectPayloads:
+    - effect: {fileID: 0}
+      magnitude: 5
+      target: 0
+      newCards: []
     keywords: 
     positionPreference: 0
