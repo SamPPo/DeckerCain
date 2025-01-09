@@ -42,10 +42,16 @@ public class Character_sc : MonoBehaviour
     private void PlayACardChain()
     {
         var cardBeingPlayed = GetTopCardOfDeck();
-        cardBeingPlayed.PlayCard();
+        if (cardBeingPlayed != null)
+        {
+            cardBeingPlayed.PlayCard();
+        }
+        else { Debug.Log("Deck EMPTY!"); }
+            
+
     }
 
-    private Card_sc GetTopCardOfDeck()
+    private Card_SO GetTopCardOfDeck()
     {
         return deckPile.GetCardAtIndex(0);
     }

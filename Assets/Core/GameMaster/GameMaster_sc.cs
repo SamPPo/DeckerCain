@@ -23,24 +23,10 @@ public class GameMaster_sc : MonoBehaviour
         {
             var c = Instantiate(spawnCharacters[i], p.position, p.rotation);
             characters.Add(c);
-            DEBUGAddDeckToCharacter(c.GetComponent<Character_sc>());
+            DEBUGAddDeckToCharacter(c.GetComponent<Character_sc>()); //FOR DEBUG ONLY!!!!
             i++;
         }
         InitializeScripts();
-    }
-
-    //!!!!!PURELY FOR DEBUG PROTO PURPOSES!!!!!
-    private void DEBUGAddDeckToCharacter(Character_sc c)
-    {
-        DeckPile_sc deck = new();
-
-        foreach (var cardSO in debugDeck)
-        {
-            Card_sc cardComponent = c.gameObject.AddComponent<Card_sc>();
-            cardComponent.SetEffectData(cardSO.cardData);
-            deck.AddCard(cardComponent);
-            c.SetDeckPile(deck);
-        }
     }
 
     private void InitializeScripts()
@@ -56,5 +42,18 @@ public class GameMaster_sc : MonoBehaviour
     {
         TurnAllocator_sc.StartNextRound();
         //TriggerHandler_sc.StartRoundPrecall();
+    }
+
+
+    //!!!!!PURELY FOR DEBUG PROTO PURPOSES!!!!!
+    private void DEBUGAddDeckToCharacter(Character_sc c)
+    {
+        DeckPile_sc deck = new();
+        foreach (var cardSO in debugDeck)
+        {
+            var newCard = Instantiate(cardSO);
+            deck.AddCard(newCard);
+            c.SetDeckPile(deck);
+        }
     }
 }

@@ -4,19 +4,26 @@ using UnityEngine;
 
 public class CardPile_sc
 {
-    private List<Card_sc> cards = new();
+    private List<Card_SO> cards = new();
     public int GetPileSize() { return cards.Count; }
 
-    public void AddCard(Card_sc c)
+    public void AddCard(Card_SO c)
     {
         cards.Add(c);
     }
 
-    public Card_sc GetCardAtIndex(int i)
+    public Card_SO GetCardAtIndex(int i)
     {
-        var card = cards[i];
-        cards.RemoveAt(i);
-        return card;
+        if (cards.Count == 0)
+        {
+            return null;
+        }
+        else
+        {
+            var card = cards[i];
+            cards.RemoveAt(i);
+            return card;
+        }
     }
 
     public void RemoveCardAtIndex(int i)

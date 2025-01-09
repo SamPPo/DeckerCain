@@ -19,7 +19,7 @@ public static class TurnAllocator_sc
     {
         if (turnIndex >= characters.Count)
         {
-            //StartNextRound();
+            StartNextRound();
         }
         else
         {
@@ -34,9 +34,4 @@ public static class TurnAllocator_sc
         turnIndex++;
         GiveTurnToNextCharacter();
     }
-}
-
-public class TurnAllocatorSingle
-{
-
 }

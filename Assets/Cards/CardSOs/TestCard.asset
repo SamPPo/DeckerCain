@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: TestCard
   m_EditorClassIdentifier: 
   cardData:
-    cardName: 
+    cardName: Card1
     effectPayloads:
-    - effect: {fileID: 0}
+    - effect: {fileID: 11400000, guid: 57d9123d806fd4346a0a304bf610c57d, type: 2}
       magnitude: 5
       target: 0
       newCards: []

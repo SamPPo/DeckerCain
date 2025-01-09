@@ -37,21 +37,31 @@ namespace Decker
         public PositionPreference positionPreference;
     }
 
+    public struct EffectData
+    {
+        public int magnitude;
+        public Targetting target;
+        public List<Card_SO> newCards;
+    }
+
     [Serializable]
     public class EffectPayload
     {
-        public Effect_sc effect;
+        public EffectLogic_SO effect;
         public int magnitude;
         public Targetting target;
         public List<Card_SO> newCards;
 
-        public void SetData()
+        public void PlayEffectPayload()
         {
-            effect.SetEffectData(magnitude, target);
-            if (newCards != null)
+            EffectData ed = new()
             {
-                effect.SetNewCardsToAddData(newCards);
-            }
+                magnitude = this.magnitude,
+                target = this.target,
+                newCards = this.newCards
+            };
+            effect.PlayEffect(ed);
         }
+
     }
 }
