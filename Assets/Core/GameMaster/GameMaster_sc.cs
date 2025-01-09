@@ -40,7 +40,7 @@ public class GameMaster_sc : MonoBehaviour
     [ContextMenu("StartCombat")]
     void StartCombat()
     {
-        TurnAllocator_sc.StartNextRound();
+        //TurnAllocator_sc.StartNextRound();
         //TriggerHandler_sc.StartRoundPrecall();
     }
 

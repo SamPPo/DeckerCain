@@ -1,16 +1,12 @@
+using NUnit.Framework;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Inventory_sc : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    private List<Item_SO> items = new();
+    public void AddItemToInventory(Item_SO g)
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        items.Add(g);
     }
 }

@@ -3,6 +3,23 @@ using System.Collections.Generic;
 
 namespace Decker
 {
+    public enum Trigger
+    {
+        OnCardPlay,
+        StartOfTurn,
+        EndOfTurn,
+        OnPlay,
+        OnDraw,
+        OnDiscard,
+        OnDeath,
+        OnDamage,
+        OnHeal,
+        OnKill,
+        OnSpend,
+        OnMiss,
+        OnEnd
+    }
+
     public enum Keyword
     {
         None,
@@ -29,19 +46,19 @@ namespace Decker
     }
 
     [Serializable]
+    public class ItemData
+    {
+        public string itemName;
+        public List<EffectPayload> effectPayloads;
+    }
+
+    [Serializable]
     public class CardData
     {
         public string cardName;
         public List<EffectPayload> effectPayloads;
         public List<Keyword> keywords;
         public PositionPreference positionPreference;
-    }
-
-    public struct EffectData
-    {
-        public int magnitude;
-        public Targetting target;
-        public List<Card_SO> newCards;
     }
 
     [Serializable]
@@ -51,6 +68,7 @@ namespace Decker
         public int magnitude;
         public Targetting target;
         public List<Card_SO> newCards;
+        public Trigger trigger;
 
         public void PlayEffectPayload()
         {
@@ -62,6 +80,13 @@ namespace Decker
             };
             effect.PlayEffect(ed);
         }
+    }
 
+    public struct EffectData
+    {
+        public int magnitude;
+        public Targetting target;
+        public List<Card_SO> newCards;
+        public Trigger trigger;
     }
 }
