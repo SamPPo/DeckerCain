@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using NUnit.Framework;
 using UnityEngine;
 using Decker;
+using System.Collections;
 
 public class GameMaster_sc : MonoBehaviour
 {
@@ -27,6 +28,7 @@ public class GameMaster_sc : MonoBehaviour
             i++;
         }
         InitializeScripts();
+        //Wait.w.StartWait(1);
     }
 
     private void InitializeScripts()
@@ -40,8 +42,7 @@ public class GameMaster_sc : MonoBehaviour
     [ContextMenu("StartCombat")]
     void StartCombat()
     {
-        //TurnAllocator_sc.StartNextRound();
-        //TriggerHandler_sc.StartRoundPrecall();
+        TurnAllocator_sc.StartNextRound();
     }
 
 
@@ -52,6 +53,13 @@ public class GameMaster_sc : MonoBehaviour
         foreach (var cardSO in debugDeck)
         {
             var newCard = Instantiate(cardSO);
+            foreach (var ep in cardSO.effectPayloads)
+            {
+                var newEf = Instantiate(ep.effect);
+                newEf.SetEffectData(ep.magnitude, ep.target, ep.newCards, ep.trigger);
+                newCard.AddEffectLogic(newEf);
+            }
+            newCard.effectPayloads.Clear();
             deck.AddCard(newCard);
             c.SetDeckPile(deck);
         }

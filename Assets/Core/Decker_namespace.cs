@@ -6,6 +6,8 @@ namespace Decker
     public enum Trigger
     {
         OnCardPlay,
+        OnRoundStart,
+        OnRoundEnd,
         StartOfTurn,
         EndOfTurn,
         OnPlay,
@@ -16,8 +18,8 @@ namespace Decker
         OnHeal,
         OnKill,
         OnSpend,
-        OnMiss,
-        OnEnd
+        OnCrit,
+        OnMiss
     }
 
     public enum Keyword
@@ -53,15 +55,6 @@ namespace Decker
     }
 
     [Serializable]
-    public class CardData
-    {
-        public string cardName;
-        public List<EffectPayload> effectPayloads;
-        public List<Keyword> keywords;
-        public PositionPreference positionPreference;
-    }
-
-    [Serializable]
     public class EffectPayload
     {
         public EffectLogic_SO effect;
@@ -69,17 +62,6 @@ namespace Decker
         public Targetting target;
         public List<Card_SO> newCards;
         public Trigger trigger;
-
-        public void PlayEffectPayload()
-        {
-            EffectData ed = new()
-            {
-                magnitude = this.magnitude,
-                target = this.target,
-                newCards = this.newCards
-            };
-            effect.PlayEffect(ed);
-        }
     }
 
     public struct EffectData

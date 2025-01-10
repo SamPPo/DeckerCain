@@ -23,7 +23,7 @@ public static class TurnAllocator_sc
         }
         else
         {
-            Character_sc.endTurn += OnCharacterTurnEnd;
+            //Character_sc.endTurn += OnCharacterTurnEnd;
             characters[turnIndex].GetComponent<Character_sc>().StartTurn();
         }
     }

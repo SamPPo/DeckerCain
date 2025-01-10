@@ -55,4 +55,7 @@ public class Character_sc : MonoBehaviour
     {
         return deckPile.GetCardAtIndex(0);
     }
+
+    //DEBUG THING
+
 }
