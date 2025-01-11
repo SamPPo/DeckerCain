@@ -5,6 +5,7 @@ namespace Decker
 {
     public enum Trigger
     {
+        none,
         OnCardPlay,
         OnRoundStart,
         OnRoundEnd,
@@ -20,6 +21,14 @@ namespace Decker
         OnSpend,
         OnCrit,
         OnMiss
+    }
+
+    public enum WaitTime
+    {
+        Long,
+        Medium,
+        Short,
+        Snap
     }
 
     public enum Keyword
@@ -48,13 +57,6 @@ namespace Decker
     }
 
     [Serializable]
-    public class ItemData
-    {
-        public string itemName;
-        public List<EffectPayload> effectPayloads;
-    }
-
-    [Serializable]
     public class EffectPayload
     {
         public EffectLogic_SO effect;
@@ -62,13 +64,28 @@ namespace Decker
         public Targetting target;
         public List<Card_SO> newCards;
         public Trigger trigger;
+        public WaitTime triggerWaitTime;
+
+        public EffectData MakeEffectData()
+        {
+            EffectData ef = new()
+            {
+                magn = magnitude,
+                targ = target,
+                newc = newCards,
+                trig = trigger,
+                wait = triggerWaitTime
+            };
+            return ef;
+        }
     }
 
     public struct EffectData
     {
-        public int magnitude;
-        public Targetting target;
-        public List<Card_SO> newCards;
-        public Trigger trigger;
+        public int magn;
+        public Targetting targ;
+        public List<Card_SO> newc;
+        public Trigger trig;
+        public WaitTime wait;
     }
 }

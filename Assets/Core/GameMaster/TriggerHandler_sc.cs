@@ -14,18 +14,24 @@ public static class TriggerHandler
     public delegate void OnCardPlayDelegate();
     public static OnCardPlayDelegate onCardPlay;
 
-    public delegate void TriggersDoneDelegate();
-    public static TriggersDoneDelegate triggersDone;
+    public delegate void OnDamageDelegate();
+    public static OnDamageDelegate onDamage;
+
+    public delegate void AllEventsTriggeredDelegate();
+    public static AllEventsTriggeredDelegate allEventsTriggered;
+
+    public delegate void ResetTriggersDelegate();
+    public static ResetTriggersDelegate resetTriggers;
 
     private static List<TriggerBindList> triggerBindList = new();
-    private static List<EffectLogic_SO> binders = new();
-    private static int listIndex;
-    private static int innerIndex;
 
-    public static void EventTrigger(Trigger t)
+    public static void TriggerEvent(Trigger t)
     {
         switch (t)
         {
+            case Trigger.none:
+                // Do nothing
+                break;
             case Trigger.OnCardPlay:
                 // Handle OnCardPlay trigger
                 onCardPlay?.Invoke();
@@ -56,6 +62,7 @@ public static class TriggerHandler
                 break;
             case Trigger.OnDamage:
                 // Handle OnDamage trigger
+                onDamage?.Invoke();
                 break;
             case Trigger.OnHeal:
                 // Handle OnHeal trigger
@@ -75,19 +82,13 @@ public static class TriggerHandler
             default:
                 throw new ArgumentOutOfRangeException(nameof(t), t, null);
         }
-
-        if (binders.Count > 0) 
-        {
-            Debug.Log("Amount of objects binded: " + binders.Count);
-            listIndex = binders.Count;
-            TriggerNextEventInQueue();
-        }
-    }
+        TriggerNextEventInQueue();
+     }
 
     public static void BindToEvent(EffectLogic_SO c, Trigger t)
     {
         bool added = false;
-        Debug.Log(c + "is bound to trigger event");
+        Debug.Log(c + "is bound to " + t + " event");
         if (triggerBindList.Count > 0)
         {
             foreach (var a in triggerBindList)
@@ -110,40 +111,34 @@ public static class TriggerHandler
 
     private static void TriggerNextEventInQueue()
     {
-        int i = triggerBindList.Count -1;
-        bool searching = true;
-        while (searching)
+        if (triggerBindList.Count != 0)
         {
-            if (triggerBindList[i].hasTriggered)
+            var ef = triggerBindList.Last().list.Last();
+            int i = triggerBindList.Last().list.Count - 1;
+            if (i > 0)
             {
-
+                triggerBindList.Last().list.RemoveAt(i);
             }
-            else
+            else 
             {
-                
+                triggerBindList.RemoveAt(triggerBindList.Count - 1);
             }
-        }
-
-        /*
-         * FINISH THIS STUFF. ADD THE LIST IN LIST BINDING SEARCH FOR TriggerBindList and EffectLogic_SO inside it
-         * 
-         */
-        if (listIndex >= binders.Count)
-        {
-            Debug.Log("All events triggered!");
-            AllEventsTriggered();
+            ef.ActivateEffect();
         }
         else
         {
-            EffectLogic_SO.eventTriggerCompleted += TriggerNextEventInQueue;
-            triggerBindList[listIndex].TriggerActivation();
+            AllEventsTriggered();
         }
     }
 
     private static void AllEventsTriggered()
     {
-        EffectLogic_SO.eventTriggerCompleted -= TriggerNextEventInQueue;
-        binders.Clear();
+        allEventsTriggered?.Invoke();
+    }
+
+    public static void ResetAllTriggers()
+    {
+        resetTriggers?.Invoke();
     }
 }
 
@@ -151,5 +146,4 @@ public class TriggerBindList
 {
     public Trigger type;
     public List<EffectLogic_SO> list = new();
-    public bool hasTriggered = false;
 }

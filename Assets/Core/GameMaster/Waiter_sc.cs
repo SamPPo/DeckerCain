@@ -23,6 +23,5 @@ public class Waiter_sc : MonoBehaviour
     {
         yield return new WaitForSeconds(s);
         waitEnded?.Invoke();
-        Debug.Log("WaitForDuration");
     }
 }

@@ -1,8 +1,14 @@
 using Decker;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "Item_SO", menuName = "Scriptable Objects/Item_SO")]
-public class Item_SO : ScriptableObject
+[CreateAssetMenu(fileName = "Item_SO", menuName = "Item_SO")]
+public class Item_SO : EffectContainer_SO
 {
-    public ItemData itemData;
+    public void BindEffectsToTriggers()
+    {
+        foreach (EffectLogic_SO e in effectLogics)
+        {
+            e.BindToTriggerDelegates();
+        }
+    }
 }

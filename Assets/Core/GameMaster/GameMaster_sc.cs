@@ -16,6 +16,8 @@ public class GameMaster_sc : MonoBehaviour
     private List<GameObject> spawnCharacters;
     [SerializeField]
     private List<Card_SO> debugDeck;
+    [SerializeField]
+    private List<Item_SO> debugItems;
 
     private void Start()
     {
@@ -56,12 +58,27 @@ public class GameMaster_sc : MonoBehaviour
             foreach (var ep in cardSO.effectPayloads)
             {
                 var newEf = Instantiate(ep.effect);
-                newEf.SetEffectData(ep.magnitude, ep.target, ep.newCards, ep.trigger);
+                newEf.SetEffectData(ep.MakeEffectData());
                 newCard.AddEffectLogic(newEf);
             }
             newCard.effectPayloads.Clear();
             deck.AddCard(newCard);
-            c.SetDeckPile(deck);
+        }
+        c.SetDeckPile(deck);
+
+        c.inventory = new();
+        foreach (var item in debugItems)
+        {
+            var newItem = Instantiate(item);
+            foreach (var ep in item.effectPayloads)
+            {
+                var newEf = Instantiate(ep.effect);
+                newEf.SetEffectData(ep.MakeEffectData());
+                newItem.AddEffectLogic(newEf);
+            }
+            newItem.effectPayloads.Clear();
+            newItem.BindEffectsToTriggers();
+            c.inventory.AddItemToInventory(newItem);
         }
     }
 }

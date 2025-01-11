@@ -132,6 +132,10 @@ PrefabInstance:
       value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 839944510797602592, guid: 4c011be941bd2e74990da3fa97d75dc0, type: 3}
+      propertyPath: debugItems.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 839944510797602592, guid: 4c011be941bd2e74990da3fa97d75dc0, type: 3}
       propertyPath: 'debugDeck.Array.data[0]'
       value: 
       objectReference: {fileID: 11400000, guid: b57262fabe188e04fb5186c21d000c94, type: 2}
@@ -143,6 +147,10 @@ PrefabInstance:
       propertyPath: 'debugDeck.Array.data[2]'
       value: 
       objectReference: {fileID: 11400000, guid: b57262fabe188e04fb5186c21d000c94, type: 2}
+    - target: {fileID: 839944510797602592, guid: 4c011be941bd2e74990da3fa97d75dc0, type: 3}
+      propertyPath: 'debugItems.Array.data[0]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 5a6dc58f9c376c84f9aefbf6bd0b4834, type: 2}
     - target: {fileID: 839944510797602592, guid: 4c011be941bd2e74990da3fa97d75dc0, type: 3}
       propertyPath: spawnCharacters.Array.size
       value: 2

@@ -7,40 +7,50 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "EffectLogic_SO", menuName = "EffectLogic_SO")]
 public class EffectLogic_SO : ScriptableObject
 {
-    public delegate void EventTriggerCompletedDelegate();
-    public static EventTriggerCompletedDelegate eventTriggerCompleted;
-
-
     private int magnitude;
     private Targetting target;
     private List<Card_SO> newCards;
     private Trigger trigger;
+    private WaitTime triggerWaitTime = WaitTime.Short;
 
-    public bool hasTriggered;
+    protected Trigger thisTriggers = Trigger.none;
 
-    public void SetEffectData(int m, Targetting t, List<Card_SO> c, Trigger r)
+    private bool hasTriggered = false;
+    private bool isBound = false;
+
+    public void SetEffectData(EffectData e)
     {
-        magnitude = m;
-        target = t;
-        newCards = c;
-        trigger = r;
-        //BindToTriggerDelegates();
+        magnitude = e.magn;
+        target = e.targ;
+        newCards = e.newc;
+        trigger = e.trig;
+        triggerWaitTime = e.wait;
     }
 
     public void PlayEffect()
     {
-        Debug.Log("Deal " + magnitude + " damage");
+        //DEBUG STUFF
+        Debug.Log("EffectLogic_SO: " + GetInstanceID() + " Deal " + magnitude + " damage");
+        thisTriggers = Trigger.OnDamage;
     }
 
-    public void TriggerActivation()
+    public void ActivateEffect()
     {
-        Debug.Log("TRIGGERED!");
-        eventTriggerCompleted?.Invoke();
+        hasTriggered = true;
+        PlayEffect();
+        Waiter_sc.waitEnded += ActivationFinished;
+        Wait.w.StartWait(Pvsc.GetWaitTime(triggerWaitTime));
+    }
+
+    private void ActivationFinished()
+    {
+        Waiter_sc.waitEnded -= ActivationFinished;
+        TriggerHandler.TriggerEvent(thisTriggers);
     }
 
     public void BindToTriggerDelegates()
     {
-        Debug.Log("Bind to " + trigger);
+        Debug.Log("EffectLogic_SO: Bind to " + trigger);
         switch (trigger)
         {
             case Trigger.OnCardPlay:
@@ -73,6 +83,7 @@ public class EffectLogic_SO : ScriptableObject
                 break;
             case Trigger.OnDamage:
                 // Handle OnDamage trigger
+                TriggerHandler.onDamage += BindToTrigger;
                 break;
             case Trigger.OnHeal:
                 // Handle OnHeal trigger
@@ -96,6 +107,18 @@ public class EffectLogic_SO : ScriptableObject
 
     private void BindToTrigger()
     {
-        TriggerHandler.BindToEvent(this, trigger);
+        if (!hasTriggered && !isBound)
+        {
+            isBound = true;
+            TriggerHandler.resetTriggers += ResetTrigger;
+            TriggerHandler.BindToEvent(this, trigger);
+        }
+    }
+
+    public void ResetTrigger()
+    {
+        TriggerHandler.resetTriggers -= ResetTrigger;
+        hasTriggered = false;
+        isBound = false;
     }
 }

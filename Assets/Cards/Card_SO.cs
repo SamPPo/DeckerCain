@@ -4,36 +4,66 @@ using UnityEngine;
 using Decker;
 using System;
 using System.Collections;
+using System.Linq;
 
-[CreateAssetMenu(fileName = "Card_SO", menuName = "Scriptable Objects/Card_SO")]
-public class Card_SO : ScriptableObject
+[CreateAssetMenu(fileName = "Card_SO", menuName = "Card_SO")]
+public class Card_SO : EffectContainer_SO
 {
-    public string cardName;
-    public List<EffectPayload> effectPayloads;
+    public delegate void CardPlayFinishedDelegate();
+    public static CardPlayFinishedDelegate cardPlayFinished;
+
     public List<Keyword> keywords;
     public PositionPreference positionPreference;
 
     private int effectIndex;
-    private List<EffectLogic_SO> effectLogics = new();
-    public void AddEffectLogic(EffectLogic_SO e)
-    { effectLogics.Add(e); }
+
 
     public void PlayCard()
     {
-        foreach (EffectLogic_SO e in effectLogics)
+        TriggerHandler.allEventsTriggered += TriggersDone;
+        if (effectLogics.Any())
         {
-            Debug.Log("PLAY CARD");
-            e.BindToTriggerDelegates();
+            effectIndex = 0;
+            PlayNextEffect();
         }
-        //TriggerHandler.triggersDone += PlayEffects;
-        TriggerHandler.EventTrigger(Trigger.OnCardPlay);
     }
 
-    private void PlayEffects()
+    private void TriggersDone()
     {
-        //TriggerHandler.triggersDone -= PlayEffects;
-        effectIndex = 0;
-        effectLogics[effectIndex].PlayEffect();
+        TriggerHandler.allEventsTriggered -= TriggersDone;
+        PlayNextEffect();
+    }
+
+    private void PlayNextEffect()
+    {
+        if (effectIndex < effectLogics.Count)
+        {
+            effectLogics[effectIndex].ActivateEffect();
+            effectIndex++;
+        }
+        else
+        {
+            AllEffectsPlayed();
+        }
+    }
+
+    private void AllEffectsPlayed()
+    {
+        TriggerHandler.allEventsTriggered += WaitBeforeFinishingCardPlay;
+        TriggerHandler.TriggerEvent(Trigger.OnCardPlay);
+    }
+
+    private void WaitBeforeFinishingCardPlay()
+    {
+        TriggerHandler.allEventsTriggered -= WaitBeforeFinishingCardPlay;
+        Waiter_sc.waitEnded += CardPlayFinished;
+        Wait.w.StartWait(Pvsc.GetWaitTime(WaitTime.Medium));
+    }
+
+    private void CardPlayFinished()
+    {
+        Debug.Log("Card_SO: Card play finished!");
+        cardPlayFinished?.Invoke();
     }
 }
 
