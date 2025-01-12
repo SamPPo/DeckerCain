@@ -213,6 +213,7 @@ GameObject:
   - component: {fileID: 3046055715472097300}
   - component: {fileID: 3864747281490797722}
   - component: {fileID: -5375186835468457249}
+  - component: {fileID: -9216661628177241365}
   m_Layer: 0
   m_Name: Character_pfab
   m_TagString: Untagged
@@ -280,8 +281,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3b37e31fca056649a54df7a554a907b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  HealthFill: {fileID: 2437738004773787108}
-  HealthDecay: {fileID: 4353068492945528421}
+  healthFill: {fileID: 2437738004773787108}
+  healthDecay: {fileID: 4353068492945528421}
+--- !u!114 &-9216661628177241365
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6667650691411701266}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6aab8eebedcc9794493a8ba19158ca72, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &6804143291165441095
 PrefabInstance:
   m_ObjectHideFlags: 0

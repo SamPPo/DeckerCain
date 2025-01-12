@@ -1,10 +1,30 @@
+using Decker;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class HealthBar_sc : MonoBehaviour
 {
     [SerializeField]
-    Slider HealthFill;
+    Slider healthFill;
     [SerializeField]
-    Slider HealthDecay;
+    Slider healthDecay;
+
+    public void InitializeSliders(int i)
+    {
+        healthFill.maxValue = i;
+        healthDecay.maxValue = i;
+    }
+
+    public void SetValue(int i)
+    {
+        healthFill.value = i;
+        StartCoroutine(WaitForDecay(i));
+    }
+
+    IEnumerator WaitForDecay(int i)
+    {
+        yield return new WaitForSeconds(Pvsc.GetWaitTime(WaitTime.Medium));
+        healthDecay.value = i;
+    }
 }

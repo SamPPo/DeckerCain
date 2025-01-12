@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Numerics;
+using UnityEngine;
 
 namespace Decker
 {
@@ -67,7 +68,7 @@ namespace Decker
         public Trigger trigger;
         public WaitTime triggerWaitTime;
 
-        public EffectData MakeEffectData()
+        public EffectData MakeEffectData(GameObject o)
         {
             EffectData ef = new()
             {
@@ -75,7 +76,8 @@ namespace Decker
                 targ = target,
                 newc = newCards,
                 trig = trigger,
-                wait = triggerWaitTime
+                wait = triggerWaitTime,
+                owner = o
             };
             return ef;
         }
@@ -88,6 +90,7 @@ namespace Decker
         public List<Card_SO> newc;
         public Trigger trig;
         public WaitTime wait;
+        public GameObject owner;
     }
 
     public struct DTransform

@@ -7,6 +7,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "EffectLogic_SO", menuName = "EffectLogic_SO")]
 public class EffectLogic_SO : ScriptableObject
 {
+    private GameObject owner;
     private int magnitude;
     private Targetting target;
     private List<Card_SO> newCards;
@@ -25,6 +26,12 @@ public class EffectLogic_SO : ScriptableObject
         newCards = e.newc;
         trigger = e.trig;
         triggerWaitTime = e.wait;
+        owner = e.owner;
+    }
+
+    private List<GameObject> GetTarget()
+    {
+        return owner.GetComponent<Targetting_sc>().GetTarget(target);
     }
 
     public void PlayEffect()

@@ -93,4 +93,10 @@ public class Character_sc : MonoBehaviour
         yield return new WaitForSeconds(time);
         waitTimer?.Invoke();
     }
+
+    public GameObject GetTarget(Targetting t)
+    {
+
+        return null;
+    }
 }
