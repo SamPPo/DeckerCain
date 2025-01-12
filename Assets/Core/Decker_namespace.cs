@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Numerics;
 
 namespace Decker
 {
@@ -87,5 +88,12 @@ namespace Decker
         public List<Card_SO> newc;
         public Trigger trig;
         public WaitTime wait;
+    }
+
+    public struct DTransform
+    {
+        public UnityEngine.Vector3 position;
+        public UnityEngine.Quaternion rotation;
+        public UnityEngine.Vector3 scale;
     }
 }

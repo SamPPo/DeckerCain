@@ -10,12 +10,19 @@ public class Character_sc : MonoBehaviour
     public void SetDeckPile(DeckPile_sc c) { deckPile = (DeckPile_sc)c; }
 
     public Inventory_sc inventory;
+    public GameObject card_pfab;
+
+    public Transform deckT;
+    public Transform displayT;
 
     private PlayPile_sc playPile;
     private SpentPile_sc spentPile;
-    //private Card_sc cardBeingPlayed;
+    private Card_SO cardBeingPlayed;
 
     //delegates
+    private delegate void WaitTimerDelegate();
+    private WaitTimerDelegate waitTimer;
+
     public delegate void EndTurnDelegate();
     public static EndTurnDelegate endTurn;
 
@@ -30,35 +37,14 @@ public class Character_sc : MonoBehaviour
         PlayACardChain();
     }
 
-    private void StartAfterTurnWait()
-    {
-        Card_SO.cardPlayFinished -= StartAfterTurnWait;
-        StartCoroutine(WaitForTurnEnd());
-    }
-
-    IEnumerator WaitForTurnEnd()
-    {
-        yield return new WaitForSeconds(Pvsc.GetWaitTime(WaitTime.Medium));
-        EndTurn();
-    }
-
-    public void EndTurn()
-    {
-        Debug.Log("Character_sc.END Turn");
-        TriggerHandler.ResetAllTriggers();
-        endTurn?.Invoke();
-    }
-
     private void PlayACardChain()
     {
-        var cardBeingPlayed = GetTopCardOfDeck();
+        cardBeingPlayed = GetTopCardOfDeck();
         if (cardBeingPlayed != null)
         {
-            cardBeingPlayed.PlayCard();
+            MoveCardToDisplay(Pvsc.GetWaitTime(WaitTime.Short));
         }
         else { Debug.Log("Deck EMPTY!"); }
-            
-
     }
 
     private Card_SO GetTopCardOfDeck()
@@ -66,6 +52,45 @@ public class Character_sc : MonoBehaviour
         return deckPile.GetCardAtIndex(0);
     }
 
-    //DEBUG THING
+    private void MoveCardToDisplay(float time)
+    {
+        waitTimer += PlayCard;
+        var card = Instantiate(card_pfab, deckT.transform.position, deckT.transform.rotation);
+        card.transform.localScale = deckT.transform.localScale;
+        DTransform trans = new()
+        {
+            position = displayT.position,
+            rotation = displayT.rotation,
+            scale = displayT.localScale
+        };
+        card.GetComponent<Card_sc>().MoveCardToTransform(trans, time);
+        StartCoroutine(WaitTimer(time));
+    }
 
+    private void PlayCard()
+    {
+        waitTimer -= PlayCard;
+        cardBeingPlayed.PlayCard();
+    }
+
+    private void StartAfterTurnWait()
+    {
+        Card_SO.cardPlayFinished -= StartAfterTurnWait;
+        waitTimer += EndTurn;
+        StartCoroutine(WaitTimer(Pvsc.GetWaitTime(WaitTime.Medium)));
+    }
+
+    public void EndTurn()
+    {
+        waitTimer -= EndTurn;
+        Debug.Log("Character_sc.END Turn");
+        TriggerHandler.ResetAllTriggers();
+        endTurn?.Invoke();
+    }
+
+    IEnumerator WaitTimer(float time)
+    {
+        yield return new WaitForSeconds(time);
+        waitTimer?.Invoke();
+    }
 }

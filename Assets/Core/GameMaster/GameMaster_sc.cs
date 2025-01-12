@@ -24,7 +24,7 @@ public class GameMaster_sc : MonoBehaviour
         int i = 0;
         foreach (Transform p in spawnPoints)
         {
-            var c = Instantiate(spawnCharacters[i], p.position, p.rotation);
+            var c = Instantiate(spawnCharacters[i], p);
             characters.Add(c);
             DEBUGAddDeckToCharacter(c.GetComponent<Character_sc>()); //FOR DEBUG ONLY!!!!
             i++;

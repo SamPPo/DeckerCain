@@ -2,15 +2,23 @@ using UnityEngine;
 
 public class Attributes_sc : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    [SerializeField]
+    private int MaxHealth = 100;
+    private int Health;
+
+    public void InitializeAttributes()
     {
-        
+        Health = MaxHealth;
     }
 
-    // Update is called once per frame
-    void Update()
+    public void DealDamage(int damage)
     {
-        
+        Health -= damage;
+        if (Health < 0)
+        {
+            Health = 0;
+            Debug.Log("Attributes_sc: Character died!");
+        }
+
     }
 }
