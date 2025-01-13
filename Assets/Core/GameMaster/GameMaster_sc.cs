@@ -4,10 +4,12 @@ using NUnit.Framework;
 using UnityEngine;
 using Decker;
 using System.Collections;
+using System.Linq;
 
 public class GameMaster_sc : MonoBehaviour
 {
     private List<GameObject> characters = new();
+    public List<GameObject> GetCharacters() { return characters; }
 
     //FOR DEBUG ONLY!
     [SerializeField]
@@ -21,16 +23,23 @@ public class GameMaster_sc : MonoBehaviour
 
     private void Start()
     {
+        GameMaster.SetGameMaster(this); //Set game master to the static class
+
         int i = 0;
         foreach (Transform p in spawnPoints)
         {
+            //!!!!!!!FOR DEBUG ONLY!!!!!!!
             var c = Instantiate(spawnCharacters[i], p);
             characters.Add(c);
-            DEBUGAddDeckToCharacter(c.GetComponent<Character_sc>()); //FOR DEBUG ONLY!!!!
+            if (i==0)
+                c.GetComponent<Character_sc>().faction = Faction.Player;
+            else
+                c.GetComponent<Character_sc>().faction = Faction.Enemy;
+            DEBUGAddDeckToCharacter(c.GetComponent<Character_sc>());
+            c.GetComponent<Character_sc>().InitializeCharacter();
             i++;
         }
         InitializeScripts();
-        //Wait.w.StartWait(1);
     }
 
     private void InitializeScripts()
@@ -81,4 +90,19 @@ public class GameMaster_sc : MonoBehaviour
             c.inventory.AddItemToInventory(newItem);
         }
     }
+}
+
+public static class GameMaster
+{
+    private static GameMaster_sc gm;
+    public static void SetGameMaster(GameMaster_sc g) { gm = g; }
+
+    public static List<GameObject> GetCharacters()
+    {
+        if (gm.GetCharacters().Any())
+            return gm.GetCharacters();
+        else
+            return null;
+    }
+
 }

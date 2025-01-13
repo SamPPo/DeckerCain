@@ -7,14 +7,14 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "EffectLogic_SO", menuName = "EffectLogic_SO")]
 public class EffectLogic_SO : ScriptableObject
 {
-    private GameObject owner;
-    private int magnitude;
-    private Targetting target;
-    private List<Card_SO> newCards;
-    private Trigger trigger;
-    private WaitTime triggerWaitTime = WaitTime.Short;
+    protected GameObject owner;
+    protected int magnitude;
+    protected Targetting target;
+    protected List<Card_SO> newCards;
+    protected Trigger trigger;
+    protected WaitTime triggerWaitTime = WaitTime.Short;
 
-    protected Trigger thisTriggers = Trigger.none;
+    public virtual Trigger ThisTriggers { get; protected set; }
 
     private bool hasTriggered = false;
     private bool isBound = false;
@@ -29,16 +29,15 @@ public class EffectLogic_SO : ScriptableObject
         owner = e.owner;
     }
 
-    private List<GameObject> GetTarget()
+    protected List<GameObject> GetTargets()
     {
-        return owner.GetComponent<Targetting_sc>().GetTarget(target);
+        return owner.GetComponent<Targetting_sc>().GetTargets(target);
     }
 
-    public void PlayEffect()
+    protected virtual void PlayEffect()
     {
         //DEBUG STUFF
         Debug.Log("EffectLogic_SO: " + GetInstanceID() + " Deal " + magnitude + " damage");
-        thisTriggers = Trigger.OnDamage;
     }
 
     public void ActivateEffect()
@@ -52,7 +51,7 @@ public class EffectLogic_SO : ScriptableObject
     private void ActivationFinished()
     {
         Waiter_sc.waitEnded -= ActivationFinished;
-        TriggerHandler.TriggerEvent(thisTriggers);
+        TriggerHandler.TriggerEvent(ThisTriggers);
     }
 
     public void BindToTriggerDelegates()

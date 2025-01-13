@@ -13,11 +13,11 @@ public static class Pvsc
         float g = GlobalWaitMultiplier;
         float f = t switch
         {
-            WaitTime.Long => 2.0f * g,
-            WaitTime.Medium => 1.0f * g,
-            WaitTime.Short => 0.6f * g,
+            WaitTime.Long => 1.6f * g,
+            WaitTime.Medium => 0.8f * g,
+            WaitTime.Short => 0.4f * g,
             WaitTime.Snap => 0.2f * g,
-            _ => 1.0f * g,
+            _ => 1.6f * g,
         };
         return f;
     }

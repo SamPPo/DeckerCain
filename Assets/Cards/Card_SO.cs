@@ -62,6 +62,7 @@ public class Card_SO : EffectContainer_SO
 
     private void CardPlayFinished()
     {
+        Waiter_sc.waitEnded -= CardPlayFinished;
         Debug.Log("Card_SO: Card play finished!");
         cardPlayFinished?.Invoke();
     }

@@ -5,6 +5,12 @@ using UnityEngine;
 
 namespace Decker
 {
+    public enum Faction
+    {
+        Player,
+        Enemy,
+        Neutral
+    }
     public enum Trigger
     {
         none,
@@ -98,5 +104,37 @@ namespace Decker
         public UnityEngine.Vector3 position;
         public UnityEngine.Quaternion rotation;
         public UnityEngine.Vector3 scale;
+
+        public void MakeTransform(Transform t)
+        {
+            position = t.position;
+            rotation = t.rotation;
+            scale = t.localScale;
+        }
+
+        public void MakeCameraFacingTransform(Transform t)
+        {
+            position = t.position;
+            scale = t.localScale;
+
+            // Calculate the rotation to face the camera
+            Camera mainCamera = Camera.main;
+            if (mainCamera != null)
+            {
+                // Calculate the direction from the card to the camera
+                UnityEngine.Vector3 directionToCamera = mainCamera.transform.position - t.position;
+                directionToCamera.y = 0; // Keep the direction horizontal
+
+                // Calculate the rotation to face the camera
+                UnityEngine.Quaternion targetRotation = UnityEngine.Quaternion.LookRotation(directionToCamera, UnityEngine.Vector3.up);
+
+                // Apply the rotation
+                rotation = targetRotation;
+            }
+            else
+            {
+                rotation = t.rotation; // Fallback to the original rotation if no camera is found
+            }
+        }
     }
 }

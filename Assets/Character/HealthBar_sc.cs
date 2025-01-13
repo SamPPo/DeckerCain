@@ -13,7 +13,9 @@ public class HealthBar_sc : MonoBehaviour
     public void InitializeSliders(int i)
     {
         healthFill.maxValue = i;
+        healthFill.value = i;
         healthDecay.maxValue = i;
+        healthDecay.value = i;
     }
 
     public void SetValue(int i)

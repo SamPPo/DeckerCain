@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   displayName: 
   effectPayloads:
-  - effect: {fileID: 11400000, guid: 57d9123d806fd4346a0a304bf610c57d, type: 2}
+  - effect: {fileID: 11400000, guid: 876cdaa2e7899154a9856f397c143804, type: 2}
     magnitude: 7
     target: 0
     newCards: []
