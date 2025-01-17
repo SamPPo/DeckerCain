@@ -15,17 +15,20 @@ public class Card_SO : EffectContainer_SO
     public List<Keyword> keywords;
     public PositionPreference positionPreference;
 
+    private GameObject cardPfab;
     private int effectIndex;
 
+    private Transform deck;
+    private Transform discard;
+    private Transform display;
 
     public void PlayCard()
     {
-        TriggerHandler.allEventsTriggered += TriggersDone;
-        if (effectLogics.Any())
-        {
-            effectIndex = 0;
-            PlayNextEffect();
-        }
+        effectIndex = 0;
+        InstantiateCard();
+
+        CardMovements_sc.movementCompleted += PlayNextEffect;
+        MoveCardToDisplay();
     }
 
     private void TriggersDone()
@@ -36,8 +39,11 @@ public class Card_SO : EffectContainer_SO
 
     private void PlayNextEffect()
     {
+        CardMovements_sc.movementCompleted -= PlayNextEffect;
+
         if (effectIndex < effectLogics.Count)
         {
+            TriggerHandler.allEventsTriggered += TriggersDone;
             effectLogics[effectIndex].ActivateEffect();
             effectIndex++;
         }
@@ -49,22 +55,51 @@ public class Card_SO : EffectContainer_SO
 
     private void AllEffectsPlayed()
     {
-        TriggerHandler.allEventsTriggered += WaitBeforeFinishingCardPlay;
-        TriggerHandler.TriggerEvent(Trigger.OnCardPlay);
+        Debug.Log("Card_SO: All effects played!");
+        CardMovements_sc.movementCompleted += WaitBeforeFinishingCardPlay;
+        MoveCardToDiscard();
     }
 
     private void WaitBeforeFinishingCardPlay()
     {
-        TriggerHandler.allEventsTriggered -= WaitBeforeFinishingCardPlay;
-        Waiter_sc.waitEnded += CardPlayFinished;
-        Wait.w.StartWait(Pvsc.GetWaitTime(WaitTime.Medium));
+        CardMovements_sc.movementCompleted -= WaitBeforeFinishingCardPlay;
+        TriggerHandler.allEventsTriggered += CardPlayFinished;
+        TriggerHandler.TriggerEvent(Trigger.OnCardPlay);
     }
 
     private void CardPlayFinished()
     {
-        Waiter_sc.waitEnded -= CardPlayFinished;
+        TriggerHandler.allEventsTriggered -= CardPlayFinished;
         Debug.Log("Card_SO: Card play finished!");
         cardPlayFinished?.Invoke();
+    }
+
+    public void SetPileTransforms(Transform deckT, Transform discardT, Transform displayT)
+    {
+        deck = deckT;
+        discard = discardT;
+        display = displayT;
+    }
+
+    private void MoveCardToDisplay()
+    {
+        DTransform trans = new();
+        trans.MakeCameraFacingTransform(display);
+        cardPfab.GetComponent<CardMovements_sc>().MoveCardToTransform(trans, Pvsc.GetWaitTime(WaitTime.Medium));
+    }
+
+    private void MoveCardToDiscard()
+    {
+        DTransform trans = new();
+        trans.MakeCameraFacingTransform(discard);
+        cardPfab.GetComponent<CardMovements_sc>().MoveCardToTransform(trans, Pvsc.GetWaitTime(WaitTime.Medium));
+    }
+
+    public void InstantiateCard()
+    {
+        //spawn card and set its Transform
+        cardPfab = Instantiate(GameMaster.GetCardPfab(), deck.position, deck.rotation);
+        cardPfab.transform.localScale = deck.localScale;
     }
 }
 

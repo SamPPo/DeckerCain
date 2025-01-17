@@ -28,7 +28,8 @@ namespace Decker
         OnKill,
         OnSpend,
         OnCrit,
-        OnMiss
+        OnMiss,
+        OnCardAdd
     }
 
     public enum WaitTime
@@ -121,15 +122,7 @@ namespace Decker
             Camera mainCamera = Camera.main;
             if (mainCamera != null)
             {
-                // Calculate the direction from the card to the camera
-                UnityEngine.Vector3 directionToCamera = mainCamera.transform.position - t.position;
-                directionToCamera.y = 0; // Keep the direction horizontal
-
-                // Calculate the rotation to face the camera
-                UnityEngine.Quaternion targetRotation = UnityEngine.Quaternion.LookRotation(directionToCamera, UnityEngine.Vector3.up);
-
-                // Apply the rotation
-                rotation = targetRotation;
+                rotation = UnityEngine.Quaternion.LookRotation(Camera.main.transform.up, -Camera.main.transform.forward);
             }
             else
             {

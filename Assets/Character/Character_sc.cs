@@ -15,12 +15,11 @@ public class Character_sc : MonoBehaviour
 
     public Transform deckT;
     public Transform displayT;
-    public Transform playT;
+    public Transform discardT;
 
     private PlayPile_sc playPile;
     private SpentPile_sc spentPile;
-    private Card_SO cardSOInPlay;
-    private GameObject cardInPlay;
+    private Card_SO cardInPlay;
 
     //delegates
     private delegate void WaitTimerDelegate();
@@ -46,10 +45,13 @@ public class Character_sc : MonoBehaviour
 
     private void PlayACardChain()
     {
-        cardSOInPlay = GetTopCardOfDeck();
-        if (cardSOInPlay != null)
+        cardInPlay = GetTopCardOfDeck();
+        if (cardInPlay != null)
         {
-            MoveCardToDisplay(Pvsc.GetWaitTime(WaitTime.Medium));
+            cardInPlay.SetPileTransforms(deckT, discardT, displayT);
+
+            Card_SO.cardPlayFinished += StartAfterCardPlayWait;
+            cardInPlay.PlayCard();
         }
         else { Debug.Log("Deck EMPTY!"); }
     }
@@ -59,18 +61,9 @@ public class Character_sc : MonoBehaviour
         return deckPile.GetCardAtIndex(0);
     }
 
-
-    private void PlayCard()
-    {
-        waitTimer -= PlayCard;
-        Card_SO.cardPlayFinished += StartAfterCardPlayWait;
-        cardSOInPlay.PlayCard();
-    }
-
     private void StartAfterCardPlayWait()
     {
         Card_SO.cardPlayFinished -= StartAfterCardPlayWait;
-        MoveCardToPlaypile(Pvsc.GetWaitTime(WaitTime.Short));
 
         waitTimer += EndTurn;
         StartCoroutine(WaitTimer(Pvsc.GetWaitTime(WaitTime.Medium)));
@@ -82,28 +75,6 @@ public class Character_sc : MonoBehaviour
         Debug.Log("Character_sc.END Turn");
         TriggerHandler.ResetAllTriggers();
         endTurn?.Invoke();
-    }
-
-    private void MoveCardToDisplay(float time)
-    {
-        waitTimer += PlayCard;
-
-        // Instantiate the new card and spawn it to the deck transform
-        cardInPlay = Instantiate(card_pfab, deckT.transform.position, deckT.transform.rotation);
-        cardInPlay.transform.localScale = deckT.transform.localScale;
-
-        DTransform trans = new();
-        trans.MakeCameraFacingTransform(displayT.transform);
-        cardInPlay.GetComponent<CardMovements_sc>().MoveCardToTransform(trans, time);
-
-        StartCoroutine(WaitTimer(time));
-    }
-
-    private void MoveCardToPlaypile(float time)
-    {
-        DTransform trans = new();
-        trans.MakeTransform(playT.transform);
-        cardInPlay.GetComponent<CardMovements_sc>().MoveCardToTransform(trans, time);
     }
 
     IEnumerator WaitTimer(float time)

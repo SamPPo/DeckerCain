@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 899577654114649663}
   m_Layer: 0
-  m_Name: PlayT
+  m_Name: DiscardT
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -257,7 +257,7 @@ MonoBehaviour:
   card_pfab: {fileID: 8643112281040418366, guid: 17378999055e3eb41b77cc3dc4d8f798, type: 3}
   deckT: {fileID: 1104386979113304182}
   displayT: {fileID: 5677484132429001693}
-  playT: {fileID: 899577654114649663}
+  discardT: {fileID: 899577654114649663}
 --- !u!114 &3864747281490797722
 MonoBehaviour:
   m_ObjectHideFlags: 0

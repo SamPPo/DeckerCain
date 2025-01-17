@@ -20,6 +20,9 @@ public class GameMaster_sc : MonoBehaviour
     private List<Card_SO> debugDeck;
     [SerializeField]
     private List<Item_SO> debugItems;
+    [SerializeField]
+    private GameObject cardPfab;
+    public GameObject GetCardPfab() { return cardPfab; }
 
     private void Start()
     {
@@ -103,6 +106,11 @@ public static class GameMaster
             return gm.GetCharacters();
         else
             return null;
+    }
+
+    public static GameObject GetCardPfab()
+    {
+        return gm.GetCardPfab();
     }
 
 }

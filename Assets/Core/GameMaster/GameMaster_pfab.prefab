@@ -54,6 +54,8 @@ MonoBehaviour:
   - {fileID: 6667650691411701266, guid: ca0bc4df1ec1c5a4bb816313410d32de, type: 3}
   - {fileID: 6667650691411701266, guid: ca0bc4df1ec1c5a4bb816313410d32de, type: 3}
   debugDeck: []
+  debugItems: []
+  cardPfab: {fileID: 8643112281040418366, guid: 17378999055e3eb41b77cc3dc4d8f798, type: 3}
 --- !u!114 &3215609782856625902
 MonoBehaviour:
   m_ObjectHideFlags: 0

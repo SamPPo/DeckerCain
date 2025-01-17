@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class CardPile_sc
 {
-    private List<Card_SO> cards = new();
+    protected List<Card_SO> cards = new();
     public int GetPileSize() { return cards.Count; }
 
     public void AddCard(Card_SO c)
