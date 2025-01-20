@@ -25,10 +25,10 @@ public class Card_SO : EffectContainer_SO
     public void PlayCard()
     {
         effectIndex = 0;
-        InstantiateCard();
+        InstantiateCardPfabToTransform(CardPile.Deck);
 
         CardMovements_sc.movementCompleted += PlayNextEffect;
-        MoveCardToDisplay();
+        MoveCardToPile(CardPile.Display, WaitTime.Medium);
     }
 
     private void TriggersDone()
@@ -57,7 +57,7 @@ public class Card_SO : EffectContainer_SO
     {
         Debug.Log("Card_SO: All effects played!");
         CardMovements_sc.movementCompleted += WaitBeforeFinishingCardPlay;
-        MoveCardToDiscard();
+        MoveCardToPile(CardPile.Discard, WaitTime.Medium);
     }
 
     private void WaitBeforeFinishingCardPlay()
@@ -81,25 +81,31 @@ public class Card_SO : EffectContainer_SO
         display = displayT;
     }
 
-    private void MoveCardToDisplay()
+    private void MoveCardToPile(CardPile cp, WaitTime wt)
     {
         DTransform trans = new();
-        trans.MakeCameraFacingTransform(display);
-        cardPfab.GetComponent<CardMovements_sc>().MoveCardToTransform(trans, Pvsc.GetWaitTime(WaitTime.Medium));
+        trans.MakeCameraFacingTransform(GetPileTransform(cp));
+        cardPfab.GetComponent<CardMovements_sc>().MoveCardToTransform(trans, Pvsc.GetWaitTime(wt));
     }
 
-    private void MoveCardToDiscard()
-    {
-        DTransform trans = new();
-        trans.MakeCameraFacingTransform(discard);
-        cardPfab.GetComponent<CardMovements_sc>().MoveCardToTransform(trans, Pvsc.GetWaitTime(WaitTime.Medium));
-    }
-
-    public void InstantiateCard()
+    public void InstantiateCardPfabToTransform(CardPile cp)
     {
         //spawn card and set its Transform
-        cardPfab = Instantiate(GameMaster.GetCardPfab(), deck.position, deck.rotation);
-        cardPfab.transform.localScale = deck.localScale;
+        Transform t = GetPileTransform(cp);
+        cardPfab = Instantiate(GameMaster_sc.GetCardPfab(), t.position, t.rotation);
+        cardPfab.transform.localScale = t.localScale;
+    }
+
+    private Transform GetPileTransform(CardPile cp)
+    {
+        return cp switch
+        {
+            CardPile.Deck => deck,
+            CardPile.Discard => discard,
+            CardPile.Display => display,
+            CardPile.Spent => null,
+            _ => throw new ArgumentOutOfRangeException(nameof(cp), cp, null),
+        };
     }
 }
 

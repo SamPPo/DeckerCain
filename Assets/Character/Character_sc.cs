@@ -8,6 +8,7 @@ public class Character_sc : MonoBehaviour
     //Card piles
     private DeckPile_sc deckPile;
     public void SetDeckPile(DeckPile_sc c) { deckPile = (DeckPile_sc)c; }
+    public void AddCardToDeck(Card_SO card) { deckPile.AddCard(card); }
 
     public Faction faction;
     public Inventory_sc inventory;
@@ -48,8 +49,6 @@ public class Character_sc : MonoBehaviour
         cardInPlay = GetTopCardOfDeck();
         if (cardInPlay != null)
         {
-            cardInPlay.SetPileTransforms(deckT, discardT, displayT);
-
             Card_SO.cardPlayFinished += StartAfterCardPlayWait;
             cardInPlay.PlayCard();
         }

@@ -8,8 +8,8 @@ using System.Linq;
 
 public class GameMaster_sc : MonoBehaviour
 {
-    private List<GameObject> characters = new();
-    public List<GameObject> GetCharacters() { return characters; }
+    private static List<GameObject> characters = new();
+    //public List<GameObject> GetCharacters() { return characters; }
 
     //FOR DEBUG ONLY!
     [SerializeField]
@@ -21,13 +21,13 @@ public class GameMaster_sc : MonoBehaviour
     [SerializeField]
     private List<Item_SO> debugItems;
     [SerializeField]
-    private GameObject cardPfab;
-    public GameObject GetCardPfab() { return cardPfab; }
+    private GameObject cardTemplate;
+    private static GameObject cardPfab;
+    
 
     private void Start()
     {
-        GameMaster.SetGameMaster(this); //Set game master to the static class
-
+        cardPfab = cardTemplate;
         int i = 0;
         foreach (Transform p in spawnPoints)
         {
@@ -38,7 +38,7 @@ public class GameMaster_sc : MonoBehaviour
                 c.GetComponent<Character_sc>().faction = Faction.Player;
             else
                 c.GetComponent<Character_sc>().faction = Faction.Enemy;
-            DEBUGAddDeckToCharacter(c.GetComponent<Character_sc>());
+            DEBUGAddDeckToCharacter(c);
             c.GetComponent<Character_sc>().InitializeCharacter();
             i++;
         }
@@ -59,47 +59,80 @@ public class GameMaster_sc : MonoBehaviour
         TurnAllocator_sc.StartNextRound();
     }
 
+    /*
+     * STATIC METHODS FOR GENERIC STUFF!
+    */
+
+    public static GameObject GetCardPfab()
+    { 
+        return cardPfab;
+    }
+
+    public static List<GameObject> GetCharacters()
+    {
+        if (characters.Any())
+            return characters;
+        else
+            return null;
+    }
+
+    public static Card_SO InstantiateAndInitializePresetCard(Card_SO presetCard, GameObject targetCharacter)
+    {
+        var newCard = Instantiate(presetCard);
+        foreach (var ep in presetCard.effectPayloads)
+        {
+            var newEf = Instantiate(ep.effect);
+            newEf.SetEffectData(ep.MakeEffectData(targetCharacter));
+            newCard.AddEffectLogic(newEf);
+            var t = targetCharacter.GetComponent<Character_sc>();
+            newCard.SetPileTransforms(t.deckT, t.discardT, t.displayT);
+        }
+        newCard.effectPayloads.Clear();
+        return newCard;
+    }
+
+    public static Item_SO InstantiateAndInitializePresetItem(Item_SO presetItem, GameObject targetCharacter)
+    {
+        var newItem = Instantiate(presetItem);
+        foreach (var ep in presetItem.effectPayloads)
+        {
+            var newEf = Instantiate(ep.effect);
+            newEf.SetEffectData(ep.MakeEffectData(targetCharacter));
+            newItem.AddEffectLogic(newEf);
+        }
+        newItem.effectPayloads.Clear();
+        return newItem;
+    }
 
     //!!!!!PURELY FOR DEBUG PROTO PURPOSES!!!!!
-    private void DEBUGAddDeckToCharacter(Character_sc c)
+    private void DEBUGAddDeckToCharacter(GameObject c)
     {
         DeckPile_sc deck = new();
         foreach (var cardSO in debugDeck)
         {
-            var newCard = Instantiate(cardSO);
-            foreach (var ep in cardSO.effectPayloads)
-            {
-                var newEf = Instantiate(ep.effect);
-                newEf.SetEffectData(ep.MakeEffectData(c.gameObject));
-                newCard.AddEffectLogic(newEf);
-            }
-            newCard.effectPayloads.Clear();
+            var newCard = InstantiateAndInitializePresetCard(cardSO, c);
             deck.AddCard(newCard);
         }
-        c.SetDeckPile(deck);
+        c.GetComponent<Character_sc>().SetDeckPile(deck);
 
-        c.inventory = new();
+        c.GetComponent<Character_sc>().inventory = new();
         foreach (var item in debugItems)
         {
-            var newItem = Instantiate(item);
-            foreach (var ep in item.effectPayloads)
-            {
-                var newEf = Instantiate(ep.effect);
-                newEf.SetEffectData(ep.MakeEffectData(c.gameObject));
-                newItem.AddEffectLogic(newEf);
-            }
-            newItem.effectPayloads.Clear();
+            var newItem = InstantiateAndInitializePresetItem(item, c);
             newItem.BindEffectsToTriggers();
-            c.inventory.AddItemToInventory(newItem);
+            c.GetComponent<Character_sc>().inventory.AddItemToInventory(newItem);
         }
     }
 }
 
+// STATIC GAME MASTER CURRENTLY DEPRECATED
+/*
 public static class GameMaster
 {
     private static GameMaster_sc gm;
     public static void SetGameMaster(GameMaster_sc g) { gm = g; }
 
+    
     public static List<GameObject> GetCharacters()
     {
         if (gm.GetCharacters().Any())
@@ -112,5 +145,6 @@ public static class GameMaster
     {
         return gm.GetCardPfab();
     }
-
+    
 }
+*/

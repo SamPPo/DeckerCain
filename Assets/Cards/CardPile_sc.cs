@@ -7,7 +7,7 @@ public class CardPile_sc
     protected List<Card_SO> cards = new();
     public int GetPileSize() { return cards.Count; }
 
-    public void AddCard(Card_SO c)
+    public virtual void AddCard(Card_SO c)
     {
         cards.Add(c);
     }

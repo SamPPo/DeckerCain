@@ -29,9 +29,9 @@ public class Targetting_sc : MonoBehaviour
     private List<GameObject> FindEnemyTarget()
     {
         List<GameObject> possibleTargets = new();
-        if (GameMaster.GetCharacters().Any())
+        if (GameMaster_sc.GetCharacters().Any())
         {
-            foreach (var c in GameMaster.GetCharacters())
+            foreach (var c in GameMaster_sc.GetCharacters())
             {
                 if (c.GetComponent<Character_sc>().faction != ownFaction)
                     possibleTargets.Add(c);

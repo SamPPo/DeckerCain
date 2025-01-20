@@ -65,6 +65,14 @@ namespace Decker
         All
     }
 
+    public enum CardPile
+    {
+        Deck,
+        Discard,
+        Display,
+        Spent
+    }
+
     [Serializable]
     public class EffectPayload
     {

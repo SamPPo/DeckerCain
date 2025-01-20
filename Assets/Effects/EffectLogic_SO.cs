@@ -40,6 +40,11 @@ public class EffectLogic_SO : ScriptableObject
         Debug.Log("EffectLogic_SO: " + GetInstanceID() + " Deal " + magnitude + " damage");
     }
 
+    protected virtual void PlayFinish()
+    {
+
+    }
+
     public void ActivateEffect()
     {
         hasTriggered = true;
@@ -51,6 +56,7 @@ public class EffectLogic_SO : ScriptableObject
     private void ActivationFinished()
     {
         Waiter_sc.waitEnded -= ActivationFinished;
+        PlayFinish();
         TriggerHandler.TriggerEvent(ThisTriggers);
     }
 
