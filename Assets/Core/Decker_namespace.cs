@@ -70,7 +70,8 @@ namespace Decker
         Deck,
         Discard,
         Display,
-        Spent
+        Spent,
+        Spawner
     }
 
     [Serializable]
@@ -83,7 +84,7 @@ namespace Decker
         public Trigger trigger;
         public WaitTime triggerWaitTime;
 
-        public EffectData MakeEffectData(GameObject o)
+        public EffectData MakeEffectData(GameObject o, EffectContainer_SO c)
         {
             EffectData ef = new()
             {
@@ -92,7 +93,8 @@ namespace Decker
                 newc = newCards,
                 trig = trigger,
                 wait = triggerWaitTime,
-                owner = o
+                ownerCharacter = o,
+                ownerContainer = c
             };
             return ef;
         }
@@ -105,7 +107,8 @@ namespace Decker
         public List<Card_SO> newc;
         public Trigger trig;
         public WaitTime wait;
-        public GameObject owner;
+        public GameObject ownerCharacter;
+        public EffectContainer_SO ownerContainer;
     }
 
     public struct DTransform

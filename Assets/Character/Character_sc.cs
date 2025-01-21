@@ -46,6 +46,7 @@ public class Character_sc : MonoBehaviour
 
     private void PlayACardChain()
     {
+        waitTimer -= PlayACardChain;
         cardInPlay = GetTopCardOfDeck();
         if (cardInPlay != null)
         {
@@ -60,11 +61,18 @@ public class Character_sc : MonoBehaviour
         return deckPile.GetCardAtIndex(0);
     }
 
-    private void StartAfterCardPlayWait()
+    private void StartAfterCardPlayWait(bool end)
     {
         Card_SO.cardPlayFinished -= StartAfterCardPlayWait;
-
-        waitTimer += EndTurn;
+        if (end)
+        {
+            waitTimer += EndTurn;
+        }
+        else
+        {
+            waitTimer += PlayACardChain;
+        }
+        
         StartCoroutine(WaitTimer(Pvsc.GetWaitTime(WaitTime.Medium)));
     }
 

@@ -9,13 +9,12 @@ using System.Linq;
 [CreateAssetMenu(fileName = "Card_SO", menuName = "Card_SO")]
 public class Card_SO : EffectContainer_SO
 {
-    public delegate void CardPlayFinishedDelegate();
+    public delegate void CardPlayFinishedDelegate(bool end);
     public static CardPlayFinishedDelegate cardPlayFinished;
 
     public List<Keyword> keywords;
     public PositionPreference positionPreference;
 
-    private GameObject cardPfab;
     private int effectIndex;
 
     private Transform deck;
@@ -25,10 +24,10 @@ public class Card_SO : EffectContainer_SO
     public void PlayCard()
     {
         effectIndex = 0;
-        InstantiateCardPfabToTransform(CardPile.Deck);
+        InstantiateCardPfabToTransform(deck);
 
         CardMovements_sc.movementCompleted += PlayNextEffect;
-        MoveCardToPile(CardPile.Display, WaitTime.Medium);
+        MoveCardToPile(CardPile.Display, WaitTime.Short);
     }
 
     private void TriggersDone()
@@ -57,7 +56,7 @@ public class Card_SO : EffectContainer_SO
     {
         Debug.Log("Card_SO: All effects played!");
         CardMovements_sc.movementCompleted += WaitBeforeFinishingCardPlay;
-        MoveCardToPile(CardPile.Discard, WaitTime.Medium);
+        MoveCardToPile(CardPile.Discard, WaitTime.Short);
     }
 
     private void WaitBeforeFinishingCardPlay()
@@ -71,7 +70,8 @@ public class Card_SO : EffectContainer_SO
     {
         TriggerHandler.allEventsTriggered -= CardPlayFinished;
         Debug.Log("Card_SO: Card play finished!");
-        cardPlayFinished?.Invoke();
+        bool end = keywords.Contains(Keyword.End);
+        cardPlayFinished?.Invoke(end);
     }
 
     public void SetPileTransforms(Transform deckT, Transform discardT, Transform displayT)
@@ -81,19 +81,35 @@ public class Card_SO : EffectContainer_SO
         display = displayT;
     }
 
-    private void MoveCardToPile(CardPile cp, WaitTime wt)
+    public void MoveCardToPile(CardPile cp, WaitTime wt, float delay = 0f)
     {
+        bool destroyAfterMove = false;
         DTransform trans = new();
-        trans.MakeCameraFacingTransform(GetPileTransform(cp));
-        cardPfab.GetComponent<CardMovements_sc>().MoveCardToTransform(trans, Pvsc.GetWaitTime(wt));
+        if (cp == CardPile.Display)
+        {
+            trans.MakeCameraFacingTransform(GetPileTransform(cp));
+        }
+        else
+        {
+            trans.MakeTransform(GetPileTransform(cp));
+            destroyAfterMove = true;
+        }
+        containerPfab.GetComponent<CardMovements_sc>().MoveCardToTransform(trans, Pvsc.GetWaitTime(wt), delay, destroyAfterMove);
     }
 
-    public void InstantiateCardPfabToTransform(CardPile cp)
+    public void InstantiateCardPfabToTransform(Transform t, bool faceCamera = false, Vector3 offset = default)
     {
         //spawn card and set its Transform
-        Transform t = GetPileTransform(cp);
-        cardPfab = Instantiate(GameMaster_sc.GetCardPfab(), t.position, t.rotation);
-        cardPfab.transform.localScale = t.localScale;
+        Quaternion rot;
+
+        if (faceCamera)
+        rot = Quaternion.LookRotation(Camera.main.transform.up, -Camera.main.transform.forward);
+        else
+        rot = t.rotation;
+
+        containerPfab = Instantiate(GameMaster_sc.GetCardPfab(), t.position + offset, rot);
+        containerPfab.GetComponent<CardUI_sc>().SetCardText(effectLogics, keywords);
+        containerPfab.transform.localScale = t.localScale;
     }
 
     private Transform GetPileTransform(CardPile cp)
@@ -104,7 +120,7 @@ public class Card_SO : EffectContainer_SO
             CardPile.Discard => discard,
             CardPile.Display => display,
             CardPile.Spent => null,
-            _ => throw new ArgumentOutOfRangeException(nameof(cp), cp, null),
+            _ => containerPfab != null ? containerPfab.transform : throw new InvalidOperationException("cardPfab is null"),
         };
     }
 }

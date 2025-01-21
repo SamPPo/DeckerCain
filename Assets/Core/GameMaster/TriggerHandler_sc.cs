@@ -79,6 +79,9 @@ public static class TriggerHandler
             case Trigger.OnMiss:
                 // Handle OnMiss trigger
                 break;
+            case Trigger.OnCardAdd:
+                // Handle OnMiss trigger
+                break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(t), t, null);
         }

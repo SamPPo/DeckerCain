@@ -10,15 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4b924654278176546ae617abbac225ae, type: 3}
-  m_Name: TestCard
+  m_Name: TestCard 1
   m_EditorClassIdentifier: 
   displayName: Testcard
   effectPayloads:
   - effect: {fileID: 11400000, guid: 876cdaa2e7899154a9856f397c143804, type: 2}
-    magnitude: 12
+    magnitude: 20
     target: 0
     newCards: []
     trigger: 0
     triggerWaitTime: 1
-  keywords: 
+  keywords: 03000000
   positionPreference: 0

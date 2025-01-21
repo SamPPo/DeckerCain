@@ -8,6 +8,8 @@ public static class Pvsc
     public static float wsed = 1.0f;   //Wait for small effect duration
     public static float GlobalWaitMultiplier = 1.0f;
 
+    public static Vector3 cardExtents = new(2f, 0.1f, 3f);
+
     public static float GetWaitTime(WaitTime t)
     {
         float g = GlobalWaitMultiplier;

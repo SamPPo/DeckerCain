@@ -82,7 +82,7 @@ public class GameMaster_sc : MonoBehaviour
         foreach (var ep in presetCard.effectPayloads)
         {
             var newEf = Instantiate(ep.effect);
-            newEf.SetEffectData(ep.MakeEffectData(targetCharacter));
+            newEf.SetEffectData(ep.MakeEffectData(targetCharacter, newCard));
             newCard.AddEffectLogic(newEf);
             var t = targetCharacter.GetComponent<Character_sc>();
             newCard.SetPileTransforms(t.deckT, t.discardT, t.displayT);
@@ -97,7 +97,7 @@ public class GameMaster_sc : MonoBehaviour
         foreach (var ep in presetItem.effectPayloads)
         {
             var newEf = Instantiate(ep.effect);
-            newEf.SetEffectData(ep.MakeEffectData(targetCharacter));
+            newEf.SetEffectData(ep.MakeEffectData(targetCharacter, newItem));
             newItem.AddEffectLogic(newEf);
         }
         newItem.effectPayloads.Clear();

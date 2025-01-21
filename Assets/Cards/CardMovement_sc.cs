@@ -1,15 +1,30 @@
 using UnityEngine;
 using Decker;
 using System.Collections;
+using UnityEngine.UIElements;
 
 public class CardMovements_sc : MonoBehaviour
 {
     public delegate void MovementCompletedDelegate();
     public static MovementCompletedDelegate movementCompleted;
+    private bool destroyAfter;
 
-    public void MoveCardToTransform(DTransform trans, float time)
+    public void MoveCardToTransform(DTransform trans, float time, float delay = 0f, bool destroy = false)
     {
-        StartCoroutine(MoveToTransform(trans, time));
+        destroyAfter = destroy;
+        StartCoroutine(EMoveCardToTransform(trans, time, delay));
+    }
+
+    private IEnumerator EMoveCardToTransform(DTransform trans, float time, float delay = 0f)
+    {
+        delay = Mathf.Clamp(delay, 0f, 0.9f);
+        float delayTime = delay * time;
+        float moveTime = time - delayTime;
+        if (delay>0f)
+        {
+            yield return new WaitForSeconds(delayTime);
+        }
+        StartCoroutine(MoveToTransform(trans, moveTime));
     }
 
     private IEnumerator MoveToTransform(DTransform target, float duration)
@@ -38,5 +53,10 @@ public class CardMovements_sc : MonoBehaviour
 
         //Invoke movement completed delegate
         movementCompleted?.Invoke();
+
+        if (destroyAfter)
+        {
+            Destroy(gameObject);
+        }
     }
 }
