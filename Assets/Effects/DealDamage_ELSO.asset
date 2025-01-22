@@ -12,3 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 70692a8400017ec4f9f15af289256bec, type: 3}
   m_Name: DealDamage_ELSO
   m_EditorClassIdentifier: 
+  thisTriggers: 7

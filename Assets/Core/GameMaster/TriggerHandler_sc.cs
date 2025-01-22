@@ -11,10 +11,10 @@ public static class TriggerHandler
     public delegate void StartRoundDelegate();
     public static StartRoundDelegate startRound;
 
-    public delegate void OnCardPlayDelegate();
+    public delegate void OnCardPlayDelegate(GameObject instigator = null, GameObject target = null);
     public static OnCardPlayDelegate onCardPlay;
 
-    public delegate void OnDamageDelegate();
+    public delegate void OnDamageDelegate(GameObject instigator = null, GameObject target = null);
     public static OnDamageDelegate onDamage;
 
     public delegate void AllEventsTriggeredDelegate();
@@ -25,7 +25,7 @@ public static class TriggerHandler
 
     private static List<TriggerBindList> triggerBindList = new();
 
-    public static void TriggerEvent(Trigger t)
+    public static void TriggerEvent(Trigger t, GameObject instigator = null, GameObject target = null)
     {
         switch (t)
         {
@@ -33,54 +33,32 @@ public static class TriggerHandler
                 // Do nothing
                 break;
             case Trigger.OnCardPlay:
-                // Handle OnCardPlay trigger
                 onCardPlay?.Invoke();
                 break;
-            case Trigger.OnRoundStart:
-                // Handle OnRoundStart trigger
+            case Trigger.OnCombatStart:
                 break;
-            case Trigger.OnRoundEnd:
-                // Handle OnRoundEnd trigger
+            case Trigger.OnCombatEnd:
                 break;
             case Trigger.StartOfTurn:
-                // Handle StartOfTurn trigger
                 break;
             case Trigger.EndOfTurn:
-                // Handle EndOfTurn trigger
-                break;
-            case Trigger.OnPlay:
-                // Handle OnPlay trigger
-                break;
-            case Trigger.OnDraw:
-                // Handle OnDraw trigger
-                break;
-            case Trigger.OnDiscard:
-                // Handle OnDiscard trigger
                 break;
             case Trigger.OnDeath:
-                // Handle OnDeath trigger
                 break;
             case Trigger.OnDamage:
-                // Handle OnDamage trigger
-                onDamage?.Invoke();
+                onDamage?.Invoke(instigator, target);
                 break;
             case Trigger.OnHeal:
-                // Handle OnHeal trigger
                 break;
             case Trigger.OnKill:
-                // Handle OnKill trigger
                 break;
             case Trigger.OnSpend:
-                // Handle OnSpend trigger
                 break;
             case Trigger.OnCrit:
-                // Handle OnCrit trigger
                 break;
             case Trigger.OnMiss:
-                // Handle OnMiss trigger
                 break;
             case Trigger.OnCardAdd:
-                // Handle OnMiss trigger
                 break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(t), t, null);
@@ -88,7 +66,7 @@ public static class TriggerHandler
         TriggerNextEventInQueue();
      }
 
-    public static void BindToEvent(EffectLogic_SO c, Trigger t)
+    public static void BindToEvent(EffectTriggerHandler_sc c, Trigger t)
     {
         bool added = false;
         Debug.Log(c + "is bound to " + t + " event");
@@ -126,7 +104,7 @@ public static class TriggerHandler
             {
                 triggerBindList.RemoveAt(triggerBindList.Count - 1);
             }
-            ef.ActivateEffect();
+            ef.TriggerEffect();
         }
         else
         {
@@ -148,5 +126,5 @@ public static class TriggerHandler
 public class TriggerBindList
 {
     public Trigger type;
-    public List<EffectLogic_SO> list = new();
+    public List<EffectTriggerHandler_sc> list = new();
 }

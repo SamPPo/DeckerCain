@@ -8,7 +8,7 @@ public class Item_SO : EffectContainer_SO
     {
         foreach (EffectLogic_SO e in effectLogics)
         {
-            e.BindToTriggerDelegates();
+            e.BindTriggers();
         }
     }
 }

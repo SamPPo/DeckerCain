@@ -28,7 +28,7 @@ public class CardUI_sc : MonoBehaviour
         foreach (var k in keywords)
         {
             if (i == keywords.Count - 1)
-                cardText.text += k.ToString();
+                cardText.text += "<b>" + k.ToString() + "</b>";
             else
                 cardText.text += k.ToString() + "\n";
             i++;

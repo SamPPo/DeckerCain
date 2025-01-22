@@ -12,3 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f470874f31db721489152b223012749b, type: 3}
   m_Name: AddCards_ELSO
   m_EditorClassIdentifier: 
+  thisTriggers: 13

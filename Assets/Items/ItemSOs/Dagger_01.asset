@@ -10,14 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1c7c95fd1620ef949bb4814b27ca1207, type: 3}
-  m_Name: testItem
+  m_Name: Dagger_01
   m_EditorClassIdentifier: 
-  displayName: testItem
+  displayName: 
   effectPayloads:
-  - effect: {fileID: 11400000, guid: 876cdaa2e7899154a9856f397c143804, type: 2}
-    magnitude: 5
-    target: 0
+  - effect: {fileID: 11400000, guid: a61aff5e4961dfb49a07350b209ce5b9, type: 2}
+    magnitude: 0
+    target: 1
     newCards: []
-    trigger: 7
+    trigger: 0
     triggerTarget: 0
-    triggerWaitTime: 2
+    triggerWaitTime: 0

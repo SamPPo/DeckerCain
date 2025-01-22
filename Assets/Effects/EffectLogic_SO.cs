@@ -1,35 +1,43 @@
 using Decker;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.CompilerServices;
+using Unity.VisualScripting;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "EffectLogic_SO", menuName = "EffectLogic_SO")]
 public class EffectLogic_SO : ScriptableObject
 {
+    public delegate void EffectEnd();
+    public static event EffectEnd effectEnd;
+
     protected string text; public string Text => text;
-    protected GameObject ownerCharacter;
+    protected GameObject ownerCharacter; public GameObject GetOwner() { return ownerCharacter; }
     protected EffectContainer_SO ownerContainer;
     protected int magnitude;
     protected Targetting target;
     protected List<Card_SO> newCards;
-    protected Trigger trigger;
     protected WaitTime triggerWaitTime = WaitTime.Short;
+    protected List<GameObject> targets;
 
-    public virtual Trigger ThisTriggers { get; protected set; }
+    private EffectTriggerHandler_sc effectTriggerHandler;
 
-    private bool hasTriggered = false;
-    private bool isBound = false;
+    public Trigger thisTriggers;
 
-    public void SetEffectData(EffectData e)
+    private bool wasCardActivated = false;
+    private int i;
+
+    public void InitializeEffect(EffectData e)
     {
         magnitude = e.magn;
         target = e.targ;
         newCards = e.newc;
-        trigger = e.trig;
         triggerWaitTime = e.wait;
         ownerCharacter = e.ownerCharacter;
         ownerContainer = e.ownerContainer;
+        effectTriggerHandler = new();
+        effectTriggerHandler.InitializeTriggerHandler(e.trig, e.trigT, this);
         SetText();
     }
 
@@ -43,103 +51,68 @@ public class EffectLogic_SO : ScriptableObject
         return ownerCharacter.GetComponent<Targetting_sc>().GetTargets(target);
     }
 
-    protected virtual void PlayEffect()
+    public void ActivateEffect(bool cardActivation = false)
     {
-        //DEBUG STUFF
-        Debug.Log("EffectLogic_SO: " + GetInstanceID() + " Deal " + magnitude + " damage");
+        wasCardActivated = cardActivation;
+        PrepareEffect();
     }
 
-    protected virtual void PlayFinish()
+    private void PrepareEffect()
     {
-
+        targets = GetTargets();
+        if (targets.Any())
+            PrePlayEffect();
+        else
+        {
+            if (wasCardActivated)
+                effectEnd?.Invoke();
+        }
     }
 
-    public void ActivateEffect()
+    private void PrePlayEffect()
     {
-        hasTriggered = true;
-        PlayEffect();
-        Waiter_sc.waitEnded += ActivationFinished;
+        Waiter_sc.waitEnded += PlayEffect;
         Wait.w.StartWait(Pvsc.GetWaitTime(triggerWaitTime));
+        PrePlayEffectInherited();
     }
 
-    private void ActivationFinished()
+    private void PlayEffect()
     {
-        Waiter_sc.waitEnded -= ActivationFinished;
-        PlayFinish();
-        TriggerHandler.TriggerEvent(ThisTriggers);
+        Waiter_sc.waitEnded -= PlayEffect;
+        i = 0;
+        LoopEffect();
     }
 
-    public void BindToTriggerDelegates()
+    private void LoopEffect()
     {
-        Debug.Log("EffectLogic_SO: Bind to " + trigger);
-        switch (trigger)
+        TriggerHandler.allEventsTriggered -= LoopEffect;
+        if (i < targets.Count)
         {
-            case Trigger.OnCardPlay:
-                // Handle OnCardPlay trigger
-                TriggerHandler.onCardPlay += BindToTrigger;
-                break;
-            case Trigger.OnRoundStart:
-                // Handle OnRoundStart trigger
-                break;
-            case Trigger.OnRoundEnd:
-                // Handle OnRoundEnd trigger
-                break;
-            case Trigger.StartOfTurn:
-                // Handle StartOfTurn trigger
-                break;
-            case Trigger.EndOfTurn:
-                // Handle EndOfTurn trigger
-                break;
-            case Trigger.OnPlay:
-                // Handle OnPlay trigger
-                break;
-            case Trigger.OnDraw:
-                // Handle OnDraw trigger
-                break;
-            case Trigger.OnDiscard:
-                // Handle OnDiscard trigger
-                break;
-            case Trigger.OnDeath:
-                // Handle OnDeath trigger
-                break;
-            case Trigger.OnDamage:
-                // Handle OnDamage trigger
-                TriggerHandler.onDamage += BindToTrigger;
-                break;
-            case Trigger.OnHeal:
-                // Handle OnHeal trigger
-                break;
-            case Trigger.OnKill:
-                // Handle OnKill trigger
-                break;
-            case Trigger.OnSpend:
-                // Handle OnSpend trigger
-                break;
-            case Trigger.OnCrit:
-                // Handle OnCrit trigger
-                break;
-            case Trigger.OnMiss:
-                // Handle OnMiss trigger
-                break;
-            default:
-                throw new ArgumentOutOfRangeException(nameof(trigger), trigger, null);
+            var target = targets[i];
+            i++;
+            PlayEffectInherited(i, target);
+            TriggerHandler.allEventsTriggered += LoopEffect;
+            TriggerHandler.TriggerEvent(thisTriggers, ownerCharacter, target);
+        }
+        else 
+        {
+            if (wasCardActivated)
+                effectEnd?.Invoke();
         }
     }
 
-    private void BindToTrigger()
+    protected virtual void PrePlayEffectInherited()
     {
-        if (!hasTriggered && !isBound)
-        {
-            isBound = true;
-            TriggerHandler.resetTriggers += ResetTrigger;
-            TriggerHandler.BindToEvent(this, trigger);
-        }
+
     }
 
-    public void ResetTrigger()
+    protected virtual void PlayEffectInherited(int loopCount, GameObject target)
     {
-        TriggerHandler.resetTriggers -= ResetTrigger;
-        hasTriggered = false;
-        isBound = false;
+
+    }
+
+    public void BindTriggers()
+    {
+        effectTriggerHandler?.BindTrigger();
     }
 }

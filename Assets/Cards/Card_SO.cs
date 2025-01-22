@@ -30,9 +30,9 @@ public class Card_SO : EffectContainer_SO
         MoveCardToPile(CardPile.Display, WaitTime.Short);
     }
 
-    private void TriggersDone()
+    private void EffectActivated()
     {
-        TriggerHandler.allEventsTriggered -= TriggersDone;
+        EffectLogic_SO.effectEnd -= EffectActivated;
         PlayNextEffect();
     }
 
@@ -42,8 +42,8 @@ public class Card_SO : EffectContainer_SO
 
         if (effectIndex < effectLogics.Count)
         {
-            TriggerHandler.allEventsTriggered += TriggersDone;
-            effectLogics[effectIndex].ActivateEffect();
+            EffectLogic_SO.effectEnd += EffectActivated;
+            effectLogics[effectIndex].ActivateEffect(true);
             effectIndex++;
         }
         else
@@ -63,7 +63,7 @@ public class Card_SO : EffectContainer_SO
     {
         CardMovements_sc.movementCompleted -= WaitBeforeFinishingCardPlay;
         TriggerHandler.allEventsTriggered += CardPlayFinished;
-        TriggerHandler.TriggerEvent(Trigger.OnCardPlay);
+        TriggerHandler.TriggerEvent(Trigger.OnCardPlay, null, null);
     }
 
     private void CardPlayFinished()

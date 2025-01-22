@@ -82,7 +82,7 @@ public class GameMaster_sc : MonoBehaviour
         foreach (var ep in presetCard.effectPayloads)
         {
             var newEf = Instantiate(ep.effect);
-            newEf.SetEffectData(ep.MakeEffectData(targetCharacter, newCard));
+            newEf.InitializeEffect(ep.MakeEffectData(targetCharacter, newCard));
             newCard.AddEffectLogic(newEf);
             var t = targetCharacter.GetComponent<Character_sc>();
             newCard.SetPileTransforms(t.deckT, t.discardT, t.displayT);
@@ -97,7 +97,7 @@ public class GameMaster_sc : MonoBehaviour
         foreach (var ep in presetItem.effectPayloads)
         {
             var newEf = Instantiate(ep.effect);
-            newEf.SetEffectData(ep.MakeEffectData(targetCharacter, newItem));
+            newEf.InitializeEffect(ep.MakeEffectData(targetCharacter, newItem));
             newItem.AddEffectLogic(newEf);
         }
         newItem.effectPayloads.Clear();
@@ -124,27 +124,3 @@ public class GameMaster_sc : MonoBehaviour
         }
     }
 }
-
-// STATIC GAME MASTER CURRENTLY DEPRECATED
-/*
-public static class GameMaster
-{
-    private static GameMaster_sc gm;
-    public static void SetGameMaster(GameMaster_sc g) { gm = g; }
-
-    
-    public static List<GameObject> GetCharacters()
-    {
-        if (gm.GetCharacters().Any())
-            return gm.GetCharacters();
-        else
-            return null;
-    }
-
-    public static GameObject GetCardPfab()
-    {
-        return gm.GetCardPfab();
-    }
-    
-}
-*/

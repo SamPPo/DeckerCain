@@ -10,16 +10,8 @@ public class DealDamage_ELSO : EffectLogic_SO
         text = "Deal " + magnitude + " damage";
     }
 
-    protected override void PlayEffect()
+    protected override void PlayEffectInherited(int loopCount, GameObject target)
     {
-        ThisTriggers = Trigger.OnDamage;
-        var targets = GetTargets();
-        if (targets.Any())
-        {
-            foreach (var t in targets)
-            {
-                t.GetComponent<Attributes_sc>().DealDamage(magnitude);
-            }
-        }
+        target.GetComponent<Attributes_sc>().DealDamage(magnitude);
     }
 }

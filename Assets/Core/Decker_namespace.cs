@@ -15,13 +15,10 @@ namespace Decker
     {
         none,
         OnCardPlay,
-        OnRoundStart,
-        OnRoundEnd,
+        OnCombatStart,
+        OnCombatEnd,
         StartOfTurn,
         EndOfTurn,
-        OnPlay,
-        OnDraw,
-        OnDiscard,
         OnDeath,
         OnDamage,
         OnHeal,
@@ -30,6 +27,14 @@ namespace Decker
         OnCrit,
         OnMiss,
         OnCardAdd
+    }
+
+    public enum TriggerTarget
+    {
+        Self,
+        Enemy,
+        Ally,
+        Any
     }
 
     public enum WaitTime
@@ -62,7 +67,10 @@ namespace Decker
         Enemy,
         Self,
         Ally,
-        All
+        All,
+        RandomEnemy,
+        RandomAlly,
+        RandomAny
     }
 
     public enum CardPile
@@ -82,6 +90,7 @@ namespace Decker
         public Targetting target;
         public List<Card_SO> newCards;
         public Trigger trigger;
+        public TriggerTarget triggerTarget;
         public WaitTime triggerWaitTime;
 
         public EffectData MakeEffectData(GameObject o, EffectContainer_SO c)
@@ -92,6 +101,7 @@ namespace Decker
                 targ = target,
                 newc = newCards,
                 trig = trigger,
+                trigT = triggerTarget,
                 wait = triggerWaitTime,
                 ownerCharacter = o,
                 ownerContainer = c
@@ -106,6 +116,7 @@ namespace Decker
         public Targetting targ;
         public List<Card_SO> newc;
         public Trigger trig;
+        public TriggerTarget trigT;
         public WaitTime wait;
         public GameObject ownerCharacter;
         public EffectContainer_SO ownerContainer;

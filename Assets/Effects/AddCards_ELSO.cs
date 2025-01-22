@@ -24,15 +24,11 @@ public class AddCards_ELSO : EffectLogic_SO
                 cards += c.displayName;
             i++;
         }
-        text = "Add " + cards + " to target's deck";
+        text = "<b>Add</b> " + cards + " to target's deck";
     }
 
-    protected override void PlayEffect()
+    protected override void PrePlayEffectInherited()
     {
-        ThisTriggers = Trigger.OnCardAdd;
-        var targets = GetTargets();
-        if (targets.Any())
-        {
             int i = 0;
             spawnedCards = new();
             foreach (var t in targets)
@@ -46,16 +42,13 @@ public class AddCards_ELSO : EffectLogic_SO
                     i++;
                 }
             }
-        }
     }
 
-    protected override void PlayFinish()
+    protected override void PlayEffectInherited(int loopCount, GameObject target)
     {
-        foreach (var kvp in spawnedCards)
-        {
-            Card_SO card = kvp.Key;
-            GameObject target = kvp.Value;
-            target.GetComponent<Character_sc>().AddCardToDeck(card);
-        }
+        var kvp = spawnedCards[loopCount];    
+        Card_SO card = kvp.Key;
+        GameObject cardTarget = kvp.Value;
+        cardTarget.GetComponent<Character_sc>().AddCardToDeck(card);
     }
 }
