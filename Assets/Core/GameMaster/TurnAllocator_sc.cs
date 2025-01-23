@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.TextCore.Text;
+using Decker;
 
 public static class TurnAllocator_sc
 {
@@ -9,8 +10,20 @@ public static class TurnAllocator_sc
 
     private static int turnIndex = 0;
 
+    public static void StartCombat()
+    {
+        foreach (var c in characters)
+        {
+            c.GetComponent<Character_sc>().InitializeCharacter();
+        }
+
+        TriggerHandler.allEventsTriggered += StartNextRound;
+        TriggerHandler.TriggerEvent(Trigger.OnCombatStart);
+    }
+
     public static void StartNextRound()
     {
+        TriggerHandler.allEventsTriggered -= StartNextRound;
         turnIndex = 0;
         GiveTurnToNextCharacter();
     }

@@ -32,7 +32,7 @@ public class Card_SO : EffectContainer_SO
 
     private void EffectActivated()
     {
-        EffectLogic_SO.effectEnd -= EffectActivated;
+        TriggerHandler.allEventsTriggered -= EffectActivated;
         PlayNextEffect();
     }
 
@@ -42,8 +42,8 @@ public class Card_SO : EffectContainer_SO
 
         if (effectIndex < effectLogics.Count)
         {
-            EffectLogic_SO.effectEnd += EffectActivated;
-            effectLogics[effectIndex].ActivateEffect(true);
+            TriggerHandler.allEventsTriggered += EffectActivated;
+            effectLogics[effectIndex].ActivateEffect();
             effectIndex++;
         }
         else
@@ -109,6 +109,7 @@ public class Card_SO : EffectContainer_SO
 
         containerPfab = Instantiate(GameMaster_sc.GetCardPfab(), t.position + offset, rot);
         containerPfab.GetComponent<CardUI_sc>().SetCardText(effectLogics, keywords);
+        containerPfab.GetComponent<CardUI_sc>().SetCardName(displayName);
         containerPfab.transform.localScale = t.localScale;
     }
 

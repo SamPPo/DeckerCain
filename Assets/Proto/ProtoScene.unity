@@ -162,7 +162,7 @@ PrefabInstance:
     - target: {fileID: 839944510797602592, guid: 4c011be941bd2e74990da3fa97d75dc0, type: 3}
       propertyPath: 'debugItems.Array.data[0]'
       value: 
-      objectReference: {fileID: 11400000, guid: 5a6dc58f9c376c84f9aefbf6bd0b4834, type: 2}
+      objectReference: {fileID: 11400000, guid: 75337914db11f774f8fe0df060712d16, type: 2}
     - target: {fileID: 839944510797602592, guid: 4c011be941bd2e74990da3fa97d75dc0, type: 3}
       propertyPath: spawnCharacters.Array.size
       value: 2

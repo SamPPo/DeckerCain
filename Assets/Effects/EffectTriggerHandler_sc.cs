@@ -27,6 +27,7 @@ public class EffectTriggerHandler_sc
 
     public void BindTrigger()
     {
+        Debug.Log("Bind to " + trigger.ToString());
         switch (trigger)
         {
             case Trigger.none: break;
@@ -34,6 +35,7 @@ public class EffectTriggerHandler_sc
                 TriggerHandler.onCardPlay += BindToTrigger;
                 break;
             case Trigger.OnCombatStart:
+                TriggerHandler.onCombatStart += BindToTrigger;
                 break;
             case Trigger.OnCombatEnd:
                 break;
@@ -56,17 +58,31 @@ public class EffectTriggerHandler_sc
                 break;
             case Trigger.OnMiss:
                 break;
+            case Trigger.OnCardAdd:
+                break;
+            case Trigger.OnShuffleDeck:
+                break;
             default:
                 break;
         }
+    }
+
+    public void UnbindTrigger()
+    {
+        TriggerHandler.UnbindFromHandler(this);
     }
 
     private void BindToTrigger(GameObject instigator = null, GameObject target = null)
     {
         if (!hasTriggered && !isBound)
         {
-            var instigatorFaction = instigator.GetComponent<Character_sc>().faction;
-            var ownerFaction = owner.GetOwner().GetComponent<Character_sc>().faction;
+            var instigatorFaction = Faction.Neutral;
+            var ownerFaction = Faction.Neutral;
+            if (instigator != null)
+                instigatorFaction = instigator.GetComponent<Character_sc>().faction;
+            if (owner.GetOwner() != null)
+                ownerFaction = owner.GetOwner().GetComponent<Character_sc>().faction;
+
             switch (triggerTarget)
             {
                 case TriggerTarget.Self:

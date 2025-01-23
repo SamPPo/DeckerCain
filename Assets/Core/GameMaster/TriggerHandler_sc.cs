@@ -8,8 +8,8 @@ using System.Linq;
 
 public static class TriggerHandler
 {
-    public delegate void StartRoundDelegate();
-    public static StartRoundDelegate startRound;
+    public delegate void OnCombatStartRoundDelegate(GameObject instigator = null, GameObject target = null);
+    public static OnCombatStartRoundDelegate onCombatStart;
 
     public delegate void OnCardPlayDelegate(GameObject instigator = null, GameObject target = null);
     public static OnCardPlayDelegate onCardPlay;
@@ -36,6 +36,7 @@ public static class TriggerHandler
                 onCardPlay?.Invoke();
                 break;
             case Trigger.OnCombatStart:
+                onCombatStart?.Invoke();
                 break;
             case Trigger.OnCombatEnd:
                 break;
@@ -60,23 +61,25 @@ public static class TriggerHandler
                 break;
             case Trigger.OnCardAdd:
                 break;
+            case Trigger.OnShuffleDeck:
+                break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(t), t, null);
         }
         TriggerNextEventInQueue();
      }
 
-    public static void BindToEvent(EffectTriggerHandler_sc c, Trigger t)
+    public static void BindToEvent(EffectTriggerHandler_sc eth, Trigger t)
     {
         bool added = false;
-        Debug.Log(c + "is bound to " + t + " event");
+        Debug.Log(eth + "is bound to " + t + " event");
         if (triggerBindList.Count > 0)
         {
             foreach (var a in triggerBindList)
             {
                 if (a.type == t)
                 {
-                    a.list.Add(c);
+                    a.list.Add(eth);
                     added = true;
                 }
             }
@@ -84,30 +87,41 @@ public static class TriggerHandler
         if (!added)
         {
             var tbl = new TriggerBindList();
-            tbl.list.Add(c);
+            tbl.list.Add(eth);
             tbl.type = t;
             triggerBindList.Add(tbl);
         }
     }
 
+    public static void UnbindFromHandler(EffectTriggerHandler_sc eth)
+    {
+        foreach (var a in triggerBindList)
+        {
+            if (a.list.Contains(eth))
+            {
+                a.list.Remove(eth);
+                if (!a.list.Any())
+                {
+                    triggerBindList.Remove(a);
+                }
+                break;
+            }
+        }
+        TriggerNextEventInQueue();
+    }
+
     private static void TriggerNextEventInQueue()
     {
-        if (triggerBindList.Count != 0)
+        if (triggerBindList.Any())
         {
+            Debug.Log("Triggered next event in queue");
             var ef = triggerBindList.Last().list.Last();
             int i = triggerBindList.Last().list.Count - 1;
-            if (i > 0)
-            {
-                triggerBindList.Last().list.RemoveAt(i);
-            }
-            else 
-            {
-                triggerBindList.RemoveAt(triggerBindList.Count - 1);
-            }
-            ef.TriggerEffect();
+            ef.TriggerEffect();  
         }
         else
         {
+            Debug.Log("All events triggered");
             AllEventsTriggered();
         }
     }

@@ -26,7 +26,8 @@ namespace Decker
         OnSpend,
         OnCrit,
         OnMiss,
-        OnCardAdd
+        OnCardAdd,
+        OnShuffleDeck
     }
 
     public enum TriggerTarget
@@ -50,14 +51,15 @@ namespace Decker
         None,
         Spend,
         Miss,
+        Crit,
         End
     }
 
     public enum PositionPreference
     {
+        Random,
         Top,
         Upper,
-        Random,
         Lower,
         Bottom
     }
@@ -87,6 +89,7 @@ namespace Decker
     {
         public EffectLogic_SO effect;
         public int magnitude;
+        public int activationCount;
         public Targetting target;
         public List<Card_SO> newCards;
         public Trigger trigger;
@@ -98,6 +101,7 @@ namespace Decker
             EffectData ef = new()
             {
                 magn = magnitude,
+                aCount = Math.Max(activationCount, 1),
                 targ = target,
                 newc = newCards,
                 trig = trigger,
@@ -113,6 +117,7 @@ namespace Decker
     public struct EffectData
     {
         public int magn;
+        public int aCount;
         public Targetting targ;
         public List<Card_SO> newc;
         public Trigger trig;

@@ -10,14 +10,20 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1c7c95fd1620ef949bb4814b27ca1207, type: 3}
-  m_Name: Dagger_01
+  m_Name: Dagger_01_Item
   m_EditorClassIdentifier: 
   displayName: 
   effectPayloads:
   - effect: {fileID: 11400000, guid: a61aff5e4961dfb49a07350b209ce5b9, type: 2}
     magnitude: 0
+    activationCount: 0
     target: 1
-    newCards: []
-    trigger: 0
-    triggerTarget: 0
-    triggerWaitTime: 0
+    newCards:
+    - {fileID: 11400000, guid: 8e5918e26fe1a1b48ac1c89b63712ee8, type: 2}
+    - {fileID: 11400000, guid: 750374b6186cb6c44b57f2c9faa6a191, type: 2}
+    - {fileID: 11400000, guid: b169e0e446c4d514c8d3ec90e821d654, type: 2}
+    - {fileID: 11400000, guid: a79de3c622a276843abf4ada4ae282fa, type: 2}
+    - {fileID: 11400000, guid: e543dfbfc7a4b8d4daf985ac70f4d041, type: 2}
+    trigger: 2
+    triggerTarget: 3
+    triggerWaitTime: 1

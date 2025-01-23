@@ -7,7 +7,7 @@ public class DealDamage_ELSO : EffectLogic_SO
 {
     protected override void SetText()
     {
-        text = "Deal " + magnitude + " damage";
+        text = "<b>" + magnitude + "</b> damage";
     }
 
     protected override void PlayEffectInherited(int loopCount, GameObject target)

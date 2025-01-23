@@ -1,5 +1,6 @@
 using NUnit.Framework;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class CardPile_sc
@@ -12,17 +13,40 @@ public class CardPile_sc
         cards.Add(c);
     }
 
-    public Card_SO GetCardAtIndex(int i)
+    public Card_SO GetTopCard()
     {
-        if (cards.Count == 0)
+        if (cards.Any())
         {
-            return null;
+            var card = cards[^1];
+            cards.RemoveAt(cards.Count - 1);
+            return card;
         }
         else
+            return null;
+    }
+
+    public List<Card_SO> GetAllCards()
+    {
+        return cards;
+    }
+
+    public void ClearPile()
+    {
+        cards.Clear();
+    }
+
+    public Card_SO GetCardAtIndex(int i)
+    {
+        if (i < cards.Count)
         {
             var card = cards[i];
             cards.RemoveAt(i);
             return card;
+        }
+        else
+        {
+            Debug.Log("CardPile_sc: GetCardAtIndex(), Index out of range!");
+            return null;
         }
     }
 
@@ -31,14 +55,20 @@ public class CardPile_sc
         cards.RemoveAt(i);
     }
 
-    public void Shuffle()
+    public virtual void ShufflePile()
     {
-        for (int i = 0; i < cards.Count; i++)
+        ShuffleRandom(cards);
+    }
+
+    protected List<Card_SO> ShuffleRandom(List<Card_SO> pile)
+    {
+        for (int i = 0; i < pile.Count; i++)
         {
-            var temp = cards[i];
-            int randomIndex = Random.Range(i, cards.Count);
-            cards[i] = cards[randomIndex];
-            cards[randomIndex] = temp;
+            var temp = pile[i];
+            int randomIndex = Random.Range(i, pile.Count);
+            pile[i] = pile[randomIndex];
+            pile[randomIndex] = temp;
         }
+        return pile;
     }
 }

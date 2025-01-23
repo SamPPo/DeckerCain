@@ -9,13 +9,12 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "EffectLogic_SO", menuName = "EffectLogic_SO")]
 public class EffectLogic_SO : ScriptableObject
 {
-    public delegate void EffectEnd();
-    public static event EffectEnd effectEnd;
-
     protected string text; public string Text => text;
     protected GameObject ownerCharacter; public GameObject GetOwner() { return ownerCharacter; }
     protected EffectContainer_SO ownerContainer;
     protected int magnitude;
+    private int activationCount;
+    protected int activationCountDelta;
     protected Targetting target;
     protected List<Card_SO> newCards;
     protected WaitTime triggerWaitTime = WaitTime.Short;
@@ -25,12 +24,14 @@ public class EffectLogic_SO : ScriptableObject
 
     public Trigger thisTriggers;
 
-    private bool wasCardActivated = false;
     private int i;
+    private int j;
+    private bool isActive = false;
 
     public void InitializeEffect(EffectData e)
     {
         magnitude = e.magn;
+        activationCount = e.aCount;
         target = e.targ;
         newCards = e.newc;
         triggerWaitTime = e.wait;
@@ -51,10 +52,17 @@ public class EffectLogic_SO : ScriptableObject
         return ownerCharacter.GetComponent<Targetting_sc>().GetTargets(target);
     }
 
-    public void ActivateEffect(bool cardActivation = false)
+    public void ActivateEffect()
     {
-        wasCardActivated = cardActivation;
-        PrepareEffect();
+        if (isActive)
+        {
+            LoopEffect();
+        }
+        else
+        {
+            isActive = true;
+            PrepareEffect();
+        } 
     }
 
     private void PrepareEffect()
@@ -64,13 +72,13 @@ public class EffectLogic_SO : ScriptableObject
             PrePlayEffect();
         else
         {
-            if (wasCardActivated)
-                effectEnd?.Invoke();
+            EndEffectActivation();
         }
     }
 
     private void PrePlayEffect()
     {
+        activationCountDelta = activationCount;
         Waiter_sc.waitEnded += PlayEffect;
         Wait.w.StartWait(Pvsc.GetWaitTime(triggerWaitTime));
         PrePlayEffectInherited();
@@ -78,27 +86,44 @@ public class EffectLogic_SO : ScriptableObject
 
     private void PlayEffect()
     {
-        Waiter_sc.waitEnded -= PlayEffect;
         i = 0;
+        j = 0;
+        Waiter_sc.waitEnded -= PlayEffect;
         LoopEffect();
     }
 
     private void LoopEffect()
     {
-        TriggerHandler.allEventsTriggered -= LoopEffect;
-        if (i < targets.Count)
+        if (j < activationCountDelta)
         {
             var target = targets[i];
-            i++;
-            PlayEffectInherited(i, target);
-            TriggerHandler.allEventsTriggered += LoopEffect;
+            PlayEffectInherited(j, target);
+            j++;
             TriggerHandler.TriggerEvent(thisTriggers, ownerCharacter, target);
         }
-        else 
+        else
         {
-            if (wasCardActivated)
-                effectEnd?.Invoke();
+            j = 0;
+            i++;
+            if (i < targets.Count)
+            {
+                var target = targets[i];
+                PlayEffectInherited(j, target);
+                j++;
+                TriggerHandler.TriggerEvent(thisTriggers, ownerCharacter, target);
+            }
+            else
+            {
+                EndEffectActivation();
+            }
+
         }
+    }
+
+    private void EndEffectActivation()
+    {
+        isActive = false;
+        effectTriggerHandler?.UnbindTrigger();
     }
 
     protected virtual void PrePlayEffectInherited()

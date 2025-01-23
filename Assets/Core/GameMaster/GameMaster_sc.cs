@@ -38,7 +38,7 @@ public class GameMaster_sc : MonoBehaviour
                 c.GetComponent<Character_sc>().faction = Faction.Player;
             else
                 c.GetComponent<Character_sc>().faction = Faction.Enemy;
-            DEBUGAddDeckToCharacter(c);
+            DEBUGAddItemsToCharacter(c);
             c.GetComponent<Character_sc>().InitializeCharacter();
             i++;
         }
@@ -56,7 +56,27 @@ public class GameMaster_sc : MonoBehaviour
     [ContextMenu("StartCombat")]
     void StartCombat()
     {
-        TurnAllocator_sc.StartNextRound();
+        TurnAllocator_sc.StartCombat();
+    }
+
+    //!!!!!PURELY FOR DEBUG PROTO PURPOSES!!!!!
+    private void DEBUGAddItemsToCharacter(GameObject c)
+    {
+        //DeckPile_sc deck = new();
+        //foreach (var cardSO in debugDeck)
+        //{
+        //    var newCard = InstantiateAndInitializePresetCard(cardSO, c);
+        //    deck.AddCard(newCard);
+        //}
+        //c.GetComponent<Character_sc>().SetDeckPile(deck);
+
+        c.GetComponent<Character_sc>().inventory = new();
+        foreach (var item in debugItems)
+        {
+            var newItem = InstantiateAndInitializePresetItem(item, c);
+            newItem.BindEffectsToTriggers();
+            c.GetComponent<Character_sc>().inventory.AddItemToInventory(newItem);
+        }
     }
 
     /*
@@ -79,6 +99,7 @@ public class GameMaster_sc : MonoBehaviour
     public static Card_SO InstantiateAndInitializePresetCard(Card_SO presetCard, GameObject targetCharacter)
     {
         var newCard = Instantiate(presetCard);
+        newCard.SetOwner(targetCharacter);
         foreach (var ep in presetCard.effectPayloads)
         {
             var newEf = Instantiate(ep.effect);
@@ -94,6 +115,7 @@ public class GameMaster_sc : MonoBehaviour
     public static Item_SO InstantiateAndInitializePresetItem(Item_SO presetItem, GameObject targetCharacter)
     {
         var newItem = Instantiate(presetItem);
+        newItem.SetOwner(targetCharacter);
         foreach (var ep in presetItem.effectPayloads)
         {
             var newEf = Instantiate(ep.effect);
@@ -102,25 +124,5 @@ public class GameMaster_sc : MonoBehaviour
         }
         newItem.effectPayloads.Clear();
         return newItem;
-    }
-
-    //!!!!!PURELY FOR DEBUG PROTO PURPOSES!!!!!
-    private void DEBUGAddDeckToCharacter(GameObject c)
-    {
-        DeckPile_sc deck = new();
-        foreach (var cardSO in debugDeck)
-        {
-            var newCard = InstantiateAndInitializePresetCard(cardSO, c);
-            deck.AddCard(newCard);
-        }
-        c.GetComponent<Character_sc>().SetDeckPile(deck);
-
-        c.GetComponent<Character_sc>().inventory = new();
-        foreach (var item in debugItems)
-        {
-            var newItem = InstantiateAndInitializePresetItem(item, c);
-            newItem.BindEffectsToTriggers();
-            c.GetComponent<Character_sc>().inventory.AddItemToInventory(newItem);
-        }
     }
 }
