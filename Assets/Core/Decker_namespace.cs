@@ -30,6 +30,14 @@ namespace Decker
         OnShuffleDeck
     }
 
+    public enum EffectType
+    {
+        none,
+        Damage,
+        Heal,
+        GainArmor
+    }
+
     public enum TriggerTarget
     {
         Self,
@@ -125,6 +133,13 @@ namespace Decker
         public WaitTime wait;
         public GameObject ownerCharacter;
         public EffectContainer_SO ownerContainer;
+    }
+
+    public class ModifiableEffectData
+    {
+        public int magnitude;
+        public int activationCount;
+        public Targetting target;
     }
 
     public struct DTransform

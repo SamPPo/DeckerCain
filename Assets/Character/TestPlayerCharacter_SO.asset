@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4ec3a816baf91cf4584b4cce4d9c0a11, type: 3}
+  m_Name: TestPlayerCharacter_SO
+  m_EditorClassIdentifier: 
+  characterPfab: {fileID: 6667650691411701266, guid: ca0bc4df1ec1c5a4bb816313410d32de, type: 3}
+  faction: 0
+  presetDeck: []
+  presetItems:
+  - {fileID: 11400000, guid: 75337914db11f774f8fe0df060712d16, type: 2}
+  startingHealth: 60

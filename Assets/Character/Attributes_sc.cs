@@ -2,7 +2,6 @@ using UnityEngine;
 
 public class Attributes_sc : MonoBehaviour
 {
-    [SerializeField]
     public int MaxHealth { get; private set; } = 100;
     public int Health { get; private set; }
 

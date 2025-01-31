@@ -13,11 +13,15 @@ public class GameMaster_sc : MonoBehaviour
 
     //FOR DEBUG ONLY!
     [SerializeField]
-    private List<Transform> spawnPoints;
+    private List<Transform> playerSpawnPoints;
     [SerializeField]
-    private List<GameObject> spawnCharacters;
+    private List<Transform> enemySpawnPoints;
     [SerializeField]
-    private List<Card_SO> debugDeck;
+    private PlayerMaster_sc playerMaster;
+    [SerializeField]
+    private EnemyMaster_sc enemyMaster;
+    //[SerializeField]
+    //private List<Card_SO> debugDeck;
     [SerializeField]
     private List<Item_SO> debugItems;
     [SerializeField]
@@ -27,22 +31,15 @@ public class GameMaster_sc : MonoBehaviour
 
     private void Start()
     {
-        cardPfab = cardTemplate;
+        InitializeGameMaster();
         int i = 0;
-        foreach (Transform p in spawnPoints)
-        {
-            //!!!!!!!FOR DEBUG ONLY!!!!!!!
-            var c = Instantiate(spawnCharacters[i], p);
-            characters.Add(c);
-            if (i==0)
-                c.GetComponent<Character_sc>().faction = Faction.Player;
-            else
-                c.GetComponent<Character_sc>().faction = Faction.Enemy;
-            DEBUGAddItemsToCharacter(c);
-            c.GetComponent<Character_sc>().InitializeCharacter();
-            i++;
-        }
+
         InitializeScripts();
+    }
+
+    private void InitializeGameMaster()
+    {
+        cardPfab = cardTemplate;
     }
 
     private void InitializeScripts()
@@ -50,26 +47,25 @@ public class GameMaster_sc : MonoBehaviour
         TurnAllocator_sc.SetCharacters(characters);
     }
 
-    /*
-     * Round handling logic
-    */
+    //Start combat -> TurnAllocator_sc handles the turns
     [ContextMenu("StartCombat")]
     void StartCombat()
     {
         TurnAllocator_sc.StartCombat();
     }
 
+
     //!!!!!PURELY FOR DEBUG PROTO PURPOSES!!!!!
+
+    //Add items to character and initialize script variables
+    private void DebugInitializeCharacter(GameObject c)
+    {
+        DEBUGAddItemsToCharacter(c);
+        c.GetComponent<Character_sc>().InitializeCharacter();
+    }
+
     private void DEBUGAddItemsToCharacter(GameObject c)
     {
-        //DeckPile_sc deck = new();
-        //foreach (var cardSO in debugDeck)
-        //{
-        //    var newCard = InstantiateAndInitializePresetCard(cardSO, c);
-        //    deck.AddCard(newCard);
-        //}
-        //c.GetComponent<Character_sc>().SetDeckPile(deck);
-
         c.GetComponent<Character_sc>().inventory = new();
         foreach (var item in debugItems)
         {

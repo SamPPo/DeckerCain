@@ -6,23 +6,6 @@ using System.Linq;
 
 public class Character_sc : MonoBehaviour
 {
-    //Card piles
-    private DeckPile_sc deckPile;
-    public void SetDeckPile(DeckPile_sc c) { deckPile = (DeckPile_sc)c; }
-    public void AddCardToDeck(Card_SO card) { deckPile.AddCard(card); }
-    private PlayPile_sc playPile;
-    private DiscardPile_sc discardPile;
-    private SpentPile_sc spentPile;
-
-    public Faction faction;
-    public Inventory_sc inventory;
-
-    public Transform deckT;
-    public Transform displayT;
-    public Transform discardT;
-    
-    private Card_SO cardInPlay;
-
     //delegates
     private delegate void WaitTimerDelegate();
     private WaitTimerDelegate waitTimerDone;
@@ -33,14 +16,38 @@ public class Character_sc : MonoBehaviour
     public delegate void StartTurnDelegate();
     public static StartTurnDelegate startTurn;
 
+    //Card piles
+    private DeckPile_sc deckPile;
+    public void SetDeckPile(DeckPile_sc c) { deckPile = (DeckPile_sc)c; }
+    public void AddCardToDeck(Card_SO card) { deckPile.AddCard(card); }
+    private PlayPile_sc playPile;
+    private DiscardPile_sc discardPile;
+    private SpentPile_sc spentPile;
+
+    public Faction faction;
+    public Inventory_sc inventory;
+    public PassiveEffectsHandler_sc passiveEffectsHandler;
+
+    public Transform deckT;
+    public Transform displayT;
+    public Transform discardT;
+    
+    private Card_SO cardInPlay;
+    private int initiative;
+    public int GetInitiative() { return initiative; }
+
+
+
     public void InitializeCharacter()
     {
         GetComponent<Attributes_sc>().InitializeAttributes();
         GetComponent<HealthBar_sc>().InitializeSliders(GetComponent<Attributes_sc>().Health);
+        passiveEffectsHandler = new();
         deckPile = new();
         playPile = new();
         discardPile = new();
         spentPile = new();
+        inventory = new();
     }
 
     public void StartCombat()

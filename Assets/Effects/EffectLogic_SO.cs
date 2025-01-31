@@ -12,6 +12,7 @@ public class EffectLogic_SO : ScriptableObject
     protected string text; public string Text => text;
     protected GameObject ownerCharacter; public GameObject GetOwner() { return ownerCharacter; }
     protected EffectContainer_SO ownerContainer;
+    protected EffectType effectType;
     protected int magnitude;
     private int activationCount;
     protected int activationCountDelta;
@@ -67,6 +68,12 @@ public class EffectLogic_SO : ScriptableObject
 
     private void PrepareEffect()
     {
+        //ModifiableEffectData effectData = new()
+        //{
+        //    magnitude = magnitude,
+        //    activationCount = activationCount,
+        //    target = target
+        //};
         targets = GetTargets();
         if (targets.Any())
             PrePlayEffect();
