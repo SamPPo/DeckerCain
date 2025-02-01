@@ -32,19 +32,18 @@ public class GameMaster_sc : MonoBehaviour
     private void Start()
     {
         InitializeGameMaster();
-        int i = 0;
 
-        InitializeScripts();
+        //Initialize character masters and instantiate characters
+        characters.AddRange(playerMaster.InstantiateCharacters(playerSpawnPoints));
+        characters.AddRange(enemyMaster.InstantiateCharacters(enemySpawnPoints));
+
+        //Pass initialized characters to turn allocator
+        TurnAllocator_sc.SetCharacters(characters);
     }
 
     private void InitializeGameMaster()
     {
         cardPfab = cardTemplate;
-    }
-
-    private void InitializeScripts()
-    {
-        TurnAllocator_sc.SetCharacters(characters);
     }
 
     //Start combat -> TurnAllocator_sc handles the turns
@@ -94,11 +93,16 @@ public class GameMaster_sc : MonoBehaviour
 
     public static Card_SO InstantiateAndInitializePresetCard(Card_SO presetCard, GameObject targetCharacter)
     {
+        //Instantiate Card_SO and set targetCharacter as owner
         var newCard = Instantiate(presetCard);
         newCard.SetOwner(targetCharacter);
+
+        //Instantiate effects and bind them to the card
         foreach (var ep in presetCard.effectPayloads)
         {
             var newEf = Instantiate(ep.effect);
+
+            //Initialize effect with the effect payload data
             newEf.InitializeEffect(ep.MakeEffectData(targetCharacter, newCard));
             newCard.AddEffectLogic(newEf);
             var t = targetCharacter.GetComponent<Character_sc>();
@@ -110,15 +114,23 @@ public class GameMaster_sc : MonoBehaviour
 
     public static Item_SO InstantiateAndInitializePresetItem(Item_SO presetItem, GameObject targetCharacter)
     {
+        //Instantiate Item_SO and set targetCharacter as owner
         var newItem = Instantiate(presetItem);
         newItem.SetOwner(targetCharacter);
+
+        //Instantiate effects and bind them to the item
         foreach (var ep in presetItem.effectPayloads)
         {
             var newEf = Instantiate(ep.effect);
+
+            //Initialize effect with the effect payload data
             newEf.InitializeEffect(ep.MakeEffectData(targetCharacter, newItem));
             newItem.AddEffectLogic(newEf);
         }
         newItem.effectPayloads.Clear();
+
+        //Bind effects to triggers
+        newItem.BindEffectsToTriggers();
         return newItem;
     }
 }

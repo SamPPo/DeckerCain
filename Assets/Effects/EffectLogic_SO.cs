@@ -48,11 +48,6 @@ public class EffectLogic_SO : ScriptableObject
         text = "No text set";
     }
 
-    protected List<GameObject> GetTargets()
-    {
-        return ownerCharacter.GetComponent<Targetting_sc>().GetTargets(target);
-    }
-
     public void ActivateEffect()
     {
         if (isActive)
@@ -68,17 +63,13 @@ public class EffectLogic_SO : ScriptableObject
 
     private void PrepareEffect()
     {
-        //ModifiableEffectData effectData = new()
-        //{
-        //    magnitude = magnitude,
-        //    activationCount = activationCount,
-        //    target = target
-        //};
-        targets = GetTargets();
+        targets = ownerCharacter.GetComponent<Targetting_sc>().GetTargets(target);
         if (targets.Any())
             PrePlayEffect();
+            
         else
         {
+            Debug.Log("EffectLogic_SO: NULL targets found");
             EndEffectActivation();
         }
     }

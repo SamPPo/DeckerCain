@@ -29,11 +29,6 @@ public static class TurnAllocator_sc
     //Start combat
     public static void StartCombat()
     {
-        foreach (var c in characters)
-        {
-            c.GetComponent<Character_sc>().InitializeCharacter();
-        }
-
         ReordedCharactersBasedOnInitiative();
         TriggerHandler.allEventsTriggered += StartCombatRound;
         TriggerHandler.TriggerEvent(Trigger.OnCombatStart);
@@ -72,7 +67,7 @@ public static class TurnAllocator_sc
     {
         var pC = playerCharacters[playerTurnIndex].GetComponent<Character_sc>();
         playerTurnIndex++;
-        if (playerTurnIndex < playerCharacters.Count)
+        if (playerTurnIndex >= playerCharacters.Count)
             playerTurnIndex = 0;
         isPlayerTurn = false;
         pC.StartTurn();
@@ -82,13 +77,11 @@ public static class TurnAllocator_sc
     {
         var eC = enemyCharacters[enemyTurnIndex].GetComponent<Character_sc>();
         enemyTurnIndex++;
-        if (enemyTurnIndex < enemyCharacters.Count)
+        if (enemyTurnIndex >= enemyCharacters.Count)
             enemyTurnIndex = 0;
         isPlayerTurn = true;
         eC.StartTurn();
     }
-
-
 
     private static void OnCharacterTurnEnd()
     {

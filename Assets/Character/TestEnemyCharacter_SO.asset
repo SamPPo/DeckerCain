@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ec3a816baf91cf4584b4cce4d9c0a11, type: 3}
   m_Name: TestEnemyCharacter_SO
   m_EditorClassIdentifier: 
-  characterPfab: {fileID: 6667650691411701266, guid: ca0bc4df1ec1c5a4bb816313410d32de, type: 3}
+  characterPfab: {fileID: 6667650691411701266, guid: d3a7adbc257fba446bbc9bd2e9404001, type: 3}
   faction: 1
   presetDeck: []
   presetItems:
