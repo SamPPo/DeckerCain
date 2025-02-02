@@ -29,6 +29,7 @@ public class CardMovements_sc : MonoBehaviour
 
     private IEnumerator MoveToTransform(DTransform target, float duration)
     {
+        Debug.Log("CardMovements_sc: Moving to transform! " + duration);
         transform.GetPositionAndRotation(out Vector3 initialPosition, out Quaternion initialRotation);
         Vector3 initialScale = transform.localScale;
 
@@ -51,11 +52,13 @@ public class CardMovements_sc : MonoBehaviour
         transform.SetPositionAndRotation(target.position, target.rotation);
         transform.localScale = target.scale;
 
-        //Invoke movement completed delegate
+        // Invoke movement completed delegate
+        Debug.Log("CardMovements_sc: Movement completed!");
         movementCompleted?.Invoke();
 
         if (destroyAfter)
         {
+            Debug.Log("CardMovements_sc: Destroying card!");
             Destroy(gameObject);
         }
     }

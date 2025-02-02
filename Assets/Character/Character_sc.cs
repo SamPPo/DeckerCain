@@ -24,6 +24,7 @@ public class Character_sc : MonoBehaviour
     private DiscardPile_sc discardPile;
     private SpentPile_sc spentPile;
 
+    public bool Targetable { get; private set; } = true;
     public Faction faction;
     public Inventory_sc inventory;
     public PassiveEffectsHandler_sc passiveEffectsHandler;
@@ -129,6 +130,12 @@ public class Character_sc : MonoBehaviour
         Debug.Log("Character_sc.END Turn");
         TriggerHandler.ResetAllTriggers();
         endTurn?.Invoke();
+    }
+
+    public void KillCharacter()
+    {
+        Targetable = false;
+        TurnAllocator_sc.RemoveCharacterFromTurnOrder(gameObject);
     }
 
     IEnumerator WaitTimer(float time)

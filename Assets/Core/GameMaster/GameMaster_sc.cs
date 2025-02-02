@@ -105,9 +105,9 @@ public class GameMaster_sc : MonoBehaviour
             //Initialize effect with the effect payload data
             newEf.InitializeEffect(ep.MakeEffectData(targetCharacter, newCard));
             newCard.AddEffectLogic(newEf);
-            var t = targetCharacter.GetComponent<Character_sc>();
-            newCard.SetPileTransforms(t.deckT, t.discardT, t.displayT);
         }
+
+        var t = targetCharacter.GetComponent<Character_sc>();
         newCard.effectPayloads.Clear();
         return newCard;
     }

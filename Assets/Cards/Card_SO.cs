@@ -17,14 +17,10 @@ public class Card_SO : EffectContainer_SO
 
     private int effectIndex;
 
-    private Transform deck;
-    private Transform discard;
-    private Transform display;
-
     public void PlayCard()
     {
         effectIndex = 0;
-        InstantiateCardPfabToTransform(deck);
+        InstantiateCardPfabToTransform(GetPileTransform(CardPile.Deck));
 
         CardMovements_sc.movementCompleted += PlayNextEffect;
         MoveCardToPile(CardPile.Display, WaitTime.Short);
@@ -54,7 +50,7 @@ public class Card_SO : EffectContainer_SO
 
     private void AllEffectsPlayed()
     {
-        Debug.Log("Card_SO: All effects played!");
+        Debug.Log("Card_SO, " + displayName + ": all effects played!");
         CardMovements_sc.movementCompleted += WaitBeforeFinishingCardPlay;
         MoveCardToPile(CardPile.Discard, WaitTime.Short);
     }
@@ -70,19 +66,14 @@ public class Card_SO : EffectContainer_SO
     {
         TriggerHandler.allEventsTriggered -= CardPlayFinished;
         Debug.Log("Card_SO: Card play finished!");
-        bool end = keywords.Contains(Keyword.End);
-        cardPlayFinished?.Invoke(end);
-    }
 
-    public void SetPileTransforms(Transform deckT, Transform discardT, Transform displayT)
-    {
-        deck = deckT;
-        discard = discardT;
-        display = displayT;
+        //Invoke end of turn if card has end keyword
+        cardPlayFinished?.Invoke(keywords.Contains(Keyword.End));
     }
 
     public void MoveCardToPile(CardPile cp, WaitTime wt, float delay = 0f)
     {
+        Debug.Log("Card_SO: Moving " + displayName + " to " + cp + " pile");
         bool destroyAfterMove = false;
         DTransform trans = new();
         if (cp == CardPile.Display)
@@ -117,10 +108,10 @@ public class Card_SO : EffectContainer_SO
     {
         return cp switch
         {
-            CardPile.Deck => deck,
-            CardPile.Discard => discard,
-            CardPile.Display => display,
-            CardPile.Spent => null,
+            CardPile.Deck => owner.GetComponent<Character_sc>().deckT,
+            CardPile.Discard => owner.GetComponent<Character_sc>().discardT,
+            CardPile.Display => owner.GetComponent<Character_sc>().displayT,
+            CardPile.Spent => null, //TODO: Implement spent pile
             _ => containerPfab != null ? containerPfab.transform : throw new InvalidOperationException("cardPfab is null"),
         };
     }

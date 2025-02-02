@@ -33,7 +33,7 @@ public class Targetting_sc : MonoBehaviour
         {
             foreach (var c in GameMaster_sc.GetCharacters())
             {
-                if (c.GetComponent<Character_sc>().faction != ownFaction)
+                if (c.GetComponent<Character_sc>().faction != ownFaction && c.GetComponent<Character_sc>().Targetable)
                     possibleTargets.Add(c);
             }
         }

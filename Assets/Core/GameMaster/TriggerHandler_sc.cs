@@ -116,7 +116,7 @@ public static class TriggerHandler
         {
             Debug.Log("Triggered next event in queue");
             var ef = triggerBindList.Last().list.Last();
-            int i = triggerBindList.Last().list.Count - 1;
+            //int i = triggerBindList.Last().list.Count - 1;
             ef.TriggerEffect();  
         }
         else

@@ -3,28 +3,16 @@ using UnityEngine;
 using UnityEngine.TextCore.Text;
 using Decker;
 using System.Linq;
+using Unity.Mathematics.Geometry;
 
 public static class TurnAllocator_sc
 {
     private static List<GameObject> characters;
-    private static List<GameObject> enemyCharacters;
-    private static List<GameObject> playerCharacters;
+    private static List<GameObject> turnOrderCharacters;
     public static void SetCharacters(List<GameObject> c)
-    {
-        characters = c;
-        enemyCharacters = characters.Where(c => c.GetComponent<Character_sc>().faction == Faction.Enemy).ToList();
-        playerCharacters = characters.Where(c => c.GetComponent<Character_sc>().faction == Faction.Player).ToList();
-    }
-
-    private static List<CharacterMaster_sc> characterMasters;
-    public static void SetCharacterMasters(List<CharacterMaster_sc> cm) { characterMasters = cm; }
-
+    { characters = c; }
 
     private static int turnIndex = 0;
-    private static int playerTurnIndex = 0;
-    private static int enemyTurnIndex = 0;
-    private static bool isPlayerTurn = true;
-
 
     //Start combat
     public static void StartCombat()
@@ -37,13 +25,10 @@ public static class TurnAllocator_sc
     //Reorder characters based on initiative
     private static void ReordedCharactersBasedOnInitiative()
     {
-        enemyCharacters = enemyCharacters
-            .OrderBy(c => c.GetComponent<Character_sc>().GetInitiative())
-            .ToList();
-
-        playerCharacters = playerCharacters
-            .OrderBy(c => c.GetComponent<Character_sc>().GetInitiative())
-            .ToList();
+        turnOrderCharacters = characters.OrderBy(c => c.transform.position.x)
+                                        .ThenBy(c => Mathf.Abs(c.transform.position.z))
+                                        .ThenBy(c => c.GetComponent<Character_sc>().faction == Faction.Player ? 0 : 1)
+                                        .ToList();
     }
 
     //Give turn to next character
@@ -57,36 +42,21 @@ public static class TurnAllocator_sc
     private static void GiveTurnToNextCharacter()
     {
         Character_sc.endTurn += OnCharacterTurnEnd;
-        if (isPlayerTurn)
-            GiveTurnToNextPlayerCharacter();
-        else
-            GiveTurnToNextEnemyCharacter();
-    }
-
-    private static void GiveTurnToNextPlayerCharacter()
-    {
-        var pC = playerCharacters[playerTurnIndex].GetComponent<Character_sc>();
-        playerTurnIndex++;
-        if (playerTurnIndex >= playerCharacters.Count)
-            playerTurnIndex = 0;
-        isPlayerTurn = false;
-        pC.StartTurn();
-    }
-
-    private static void GiveTurnToNextEnemyCharacter()
-    {
-        var eC = enemyCharacters[enemyTurnIndex].GetComponent<Character_sc>();
-        enemyTurnIndex++;
-        if (enemyTurnIndex >= enemyCharacters.Count)
-            enemyTurnIndex = 0;
-        isPlayerTurn = true;
-        eC.StartTurn();
+        turnOrderCharacters[turnIndex].GetComponent<Character_sc>().StartTurn();
     }
 
     private static void OnCharacterTurnEnd()
     {
         Character_sc.endTurn -= OnCharacterTurnEnd;
         turnIndex++;
+        if (turnIndex >= turnOrderCharacters.Count)
+            turnIndex = 0;
         GiveTurnToNextCharacter();
+    }
+
+    public static void RemoveCharacterFromTurnOrder(GameObject c)
+    {
+        turnOrderCharacters.Remove(c);
+        characters.Remove(c);
     }
 }
